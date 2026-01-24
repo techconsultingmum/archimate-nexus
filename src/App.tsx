@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import TOGAFPage from "./pages/TOGAFPage";
 import ZachmanPage from "./pages/ZachmanPage";
+import DoDAFPage from "./pages/DoDAFPage";
+import FEAFPage from "./pages/FEAFPage";
 import RepositoryPage from "./pages/RepositoryPage";
 import NotFound from "./pages/NotFound";
 
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/togaf" element={<TOGAFPage />} />
           <Route path="/zachman" element={<ZachmanPage />} />
+          <Route path="/dodaf" element={<DoDAFPage />} />
+          <Route path="/feaf" element={<FEAFPage />} />
           <Route path="/repository/:domain" element={<RepositoryPage />} />
           {/* Placeholder routes */}
           <Route path="/diagrams" element={<Index />} />

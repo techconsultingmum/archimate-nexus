@@ -16,6 +16,7 @@ import {
   Target,
   Users,
   Shield,
+  Landmark,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,10 +27,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const mainNavItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
+const frameworkItems = [
   { title: "TOGAF ADM", url: "/togaf", icon: Layers },
   { title: "Zachman Matrix", url: "/zachman", icon: Grid3X3 },
+  { title: "DoDAF", url: "/dodaf", icon: Shield },
+  { title: "FEAF", url: "/feaf", icon: Landmark },
 ];
 
 const repositoryItems = [
@@ -51,7 +53,7 @@ export function AppSidebar() {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const NavItem = ({ item }: { item: typeof mainNavItems[0] }) => {
+  const NavItem = ({ item }: { item: typeof frameworkItems[0] }) => {
     const content = (
       <NavLink
         to={item.url}
@@ -93,7 +95,7 @@ export function AppSidebar() {
             <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
               <Layers className="w-5 h-5 text-sidebar-primary-foreground" />
             </div>
-            <span className="font-semibold text-sidebar-foreground">ArchiForge</span>
+            <span className="font-semibold text-sidebar-foreground">EA Tool</span>
           </div>
         )}
         {collapsed && (
@@ -105,14 +107,21 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        {/* Main */}
+        {/* Dashboard */}
+        <div className="space-y-1">
+          <NavItem item={{ title: "Dashboard", url: "/", icon: LayoutDashboard }} />
+        </div>
+
+        <Separator className="bg-sidebar-border" />
+
+        {/* Frameworks */}
         <div className="space-y-1">
           {!collapsed && (
             <p className="px-3 text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider mb-2">
-              Main
+              Frameworks
             </p>
           )}
-          {mainNavItems.map((item) => (
+          {frameworkItems.map((item) => (
             <NavItem key={item.url} item={item} />
           ))}
         </div>
