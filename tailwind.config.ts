@@ -57,28 +57,53 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        domain: {
+          business: "hsl(var(--domain-business))",
+          data: "hsl(var(--domain-data))",
+          application: "hsl(var(--domain-application))",
+          technology: "hsl(var(--domain-technology))",
+        },
+        phase: {
+          preliminary: "hsl(var(--phase-preliminary))",
+          a: "hsl(var(--phase-a))",
+          b: "hsl(var(--phase-b))",
+          "c-data": "hsl(var(--phase-c-data))",
+          "c-app": "hsl(var(--phase-c-app))",
+          d: "hsl(var(--phase-d))",
+          e: "hsl(var(--phase-e))",
+          f: "hsl(var(--phase-f))",
+          g: "hsl(var(--phase-g))",
+          h: "hsl(var(--phase-h))",
+          req: "hsl(var(--phase-req))",
+        },
+        zachman: {
+          planner: "hsl(var(--zachman-planner))",
+          owner: "hsl(var(--zachman-owner))",
+          designer: "hsl(var(--zachman-designer))",
+          builder: "hsl(var(--zachman-builder))",
+          subcontractor: "hsl(var(--zachman-subcontractor))",
+          worker: "hsl(var(--zachman-worker))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        'soft': 'var(--shadow-sm)',
+        'medium': 'var(--shadow-md)',
+        'elevated': 'var(--shadow-lg)',
+        'floating': 'var(--shadow-xl)',
+      },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
