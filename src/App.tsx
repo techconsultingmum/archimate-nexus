@@ -9,6 +9,7 @@ import ZachmanPage from "./pages/ZachmanPage";
 import DoDAFPage from "./pages/DoDAFPage";
 import FEAFPage from "./pages/FEAFPage";
 import RepositoryPage from "./pages/RepositoryPage";
+import RolesPage from "./pages/RolesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/dodaf" element={<DoDAFPage />} />
           <Route path="/feaf" element={<FEAFPage />} />
           <Route path="/repository/:domain" element={<RepositoryPage />} />
+          <Route path="/roles" element={<RolesPage />} />
           {/* Placeholder routes */}
           <Route path="/diagrams" element={<Index />} />
           <Route path="/requirements" element={<Index />} />

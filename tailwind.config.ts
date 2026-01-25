@@ -62,6 +62,17 @@ export default {
           data: "hsl(var(--domain-data))",
           application: "hsl(var(--domain-application))",
           technology: "hsl(var(--domain-technology))",
+          ai: "hsl(var(--domain-ai))",
+          cloud: "hsl(var(--domain-cloud))",
+        },
+        role: {
+          enterprise: "hsl(var(--role-enterprise))",
+          solution: "hsl(var(--role-solution))",
+          application: "hsl(var(--role-application))",
+          data: "hsl(var(--role-data))",
+          business: "hsl(var(--role-business))",
+          ai: "hsl(var(--role-ai))",
+          cloud: "hsl(var(--role-cloud))",
         },
         phase: {
           preliminary: "hsl(var(--phase-preliminary))",

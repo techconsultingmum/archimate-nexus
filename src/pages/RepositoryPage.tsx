@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
-import { Building2, Database, AppWindow, Server, Plus, Search, Filter, LayoutGrid, List } from "lucide-react";
+import { Building2, Database, AppWindow, Server, Plus, Search, Filter, LayoutGrid, List, Brain, Cloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,20 @@ const domainConfig = {
     color: "domain-technology",
     description: "Manage infrastructure, platforms, and technology standards",
     categories: ["Platforms", "Infrastructure", "Networks", "Standards", "Security"],
+  },
+  ai: {
+    title: "AI Architecture",
+    icon: Brain,
+    color: "domain-ai",
+    description: "AI/ML models, pipelines, datasets, and intelligent automation",
+    categories: ["Models", "Pipelines", "Datasets", "Features", "Deployments"],
+  },
+  cloud: {
+    title: "Cloud Architecture",
+    icon: Cloud,
+    color: "domain-cloud",
+    description: "Cloud infrastructure, services, and deployment patterns",
+    categories: ["Environments", "Services", "Resources", "Policies", "Costs"],
   },
 };
 
