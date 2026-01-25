@@ -17,6 +17,9 @@ import {
   Users,
   Shield,
   Landmark,
+  Brain,
+  Cloud,
+  UserCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -39,12 +42,18 @@ const repositoryItems = [
   { title: "Data", url: "/repository/data", icon: Database },
   { title: "Application", url: "/repository/application", icon: AppWindow },
   { title: "Technology", url: "/repository/technology", icon: Server },
+  { title: "AI", url: "/repository/ai", icon: Brain },
+  { title: "Cloud", url: "/repository/cloud", icon: Cloud },
 ];
 
 const toolItems = [
   { title: "Diagrams", url: "/diagrams", icon: GitBranch },
   { title: "Requirements", url: "/requirements", icon: Target },
   { title: "Governance", url: "/governance", icon: Shield },
+];
+
+const roleItems = [
+  { title: "Role Dashboard", url: "/roles", icon: UserCircle },
 ];
 
 export function AppSidebar() {
@@ -95,7 +104,10 @@ export function AppSidebar() {
             <div className="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
               <Layers className="w-5 h-5 text-sidebar-primary-foreground" />
             </div>
-            <span className="font-semibold text-sidebar-foreground">EA Tool</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-sidebar-foreground text-sm">EA Tool</span>
+              <span className="text-[10px] text-sidebar-foreground/60">Enterprise Architecture</span>
+            </div>
           </div>
         )}
         {collapsed && (
@@ -106,7 +118,7 @@ export function AppSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-4">
         {/* Dashboard */}
         <div className="space-y-1">
           <NavItem item={{ title: "Dashboard", url: "/", icon: LayoutDashboard }} />
@@ -136,6 +148,20 @@ export function AppSidebar() {
             </p>
           )}
           {repositoryItems.map((item) => (
+            <NavItem key={item.url} item={item} />
+          ))}
+        </div>
+
+        <Separator className="bg-sidebar-border" />
+
+        {/* Roles */}
+        <div className="space-y-1">
+          {!collapsed && (
+            <p className="px-3 text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider mb-2">
+              Roles
+            </p>
+          )}
+          {roleItems.map((item) => (
             <NavItem key={item.url} item={item} />
           ))}
         </div>

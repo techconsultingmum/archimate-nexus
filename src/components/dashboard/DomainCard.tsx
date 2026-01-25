@@ -9,7 +9,7 @@ interface DomainCardProps {
   icon: ReactNode;
   stats: { label: string; value: number }[];
   href: string;
-  variant: "business" | "data" | "application" | "technology";
+  variant: "business" | "data" | "application" | "technology" | "ai" | "cloud";
 }
 
 const variantStyles = {
@@ -17,6 +17,8 @@ const variantStyles = {
   data: "border-domain-data/30 hover:border-domain-data/60 [&_.domain-icon]:bg-domain-data/10 [&_.domain-icon]:text-domain-data",
   application: "border-domain-application/30 hover:border-domain-application/60 [&_.domain-icon]:bg-domain-application/10 [&_.domain-icon]:text-domain-application",
   technology: "border-domain-technology/30 hover:border-domain-technology/60 [&_.domain-icon]:bg-domain-technology/10 [&_.domain-icon]:text-domain-technology",
+  ai: "border-domain-ai/30 hover:border-domain-ai/60 [&_.domain-icon]:bg-domain-ai/10 [&_.domain-icon]:text-domain-ai",
+  cloud: "border-domain-cloud/30 hover:border-domain-cloud/60 [&_.domain-icon]:bg-domain-cloud/10 [&_.domain-icon]:text-domain-cloud",
 };
 
 export function DomainCard({ title, description, icon, stats, href, variant }: DomainCardProps) {

@@ -43,6 +43,17 @@
     --domain-data: 262 83% 58%;
     --domain-application: 173 58% 39%;
     --domain-technology: 222 47% 40%;
+    --domain-ai: 280 70% 55%;
+    --domain-cloud: 199 89% 48%;
+
+    /* Architect Role Colors */
+    --role-enterprise: 222 47% 25%;
+    --role-solution: 173 58% 39%;
+    --role-application: 199 89% 48%;
+    --role-data: 262 83% 58%;
+    --role-business: 24 95% 53%;
+    --role-ai: 280 70% 55%;
+    --role-cloud: 199 89% 48%;
 
     /* TOGAF Phase Colors */
     --phase-preliminary: 215 20% 65%;
