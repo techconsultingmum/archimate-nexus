@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      architecture_artifacts: {
+        Row: {
+          artifact_type: Database["public"]["Enums"]["artifact_type"]
+          created_at: string
+          created_by: string | null
+          description: string | null
+          domain: Database["public"]["Enums"]["architecture_domain"]
+          id: string
+          metadata: Json | null
+          name: string
+          owner_id: string | null
+          status: Database["public"]["Enums"]["artifact_status"]
+          tags: string[] | null
+          updated_at: string
+          updated_by: string | null
+          version: string
+        }
+        Insert: {
+          artifact_type: Database["public"]["Enums"]["artifact_type"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          domain: Database["public"]["Enums"]["architecture_domain"]
+          id?: string
+          metadata?: Json | null
+          name: string
+          owner_id?: string | null
+          status?: Database["public"]["Enums"]["artifact_status"]
+          tags?: string[] | null
+          updated_at?: string
+          updated_by?: string | null
+          version?: string
+        }
+        Update: {
+          artifact_type?: Database["public"]["Enums"]["artifact_type"]
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          domain?: Database["public"]["Enums"]["architecture_domain"]
+          id?: string
+          metadata?: Json | null
+          name?: string
+          owner_id?: string | null
+          status?: Database["public"]["Enums"]["artifact_status"]
+          tags?: string[] | null
+          updated_at?: string
+          updated_by?: string | null
+          version?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -70,6 +121,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_domain: {
+        Args: {
+          _domain: Database["public"]["Enums"]["architecture_domain"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       get_user_roles: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"][]
@@ -93,6 +151,28 @@ export type Database = {
         | "data_architect"
         | "business_architect"
         | "viewer"
+      architecture_domain:
+        | "business"
+        | "data"
+        | "application"
+        | "technology"
+        | "ai"
+        | "cloud"
+      artifact_status:
+        | "draft"
+        | "under_review"
+        | "approved"
+        | "deprecated"
+        | "retired"
+      artifact_type:
+        | "capability"
+        | "process"
+        | "application"
+        | "service"
+        | "data_entity"
+        | "technology_component"
+        | "ai_model"
+        | "cloud_resource"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -229,6 +309,31 @@ export const Constants = {
         "data_architect",
         "business_architect",
         "viewer",
+      ],
+      architecture_domain: [
+        "business",
+        "data",
+        "application",
+        "technology",
+        "ai",
+        "cloud",
+      ],
+      artifact_status: [
+        "draft",
+        "under_review",
+        "approved",
+        "deprecated",
+        "retired",
+      ],
+      artifact_type: [
+        "capability",
+        "process",
+        "application",
+        "service",
+        "data_entity",
+        "technology_component",
+        "ai_model",
+        "cloud_resource",
       ],
     },
   },
