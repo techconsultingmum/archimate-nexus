@@ -1,30 +1,37 @@
-import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users, TrendingUp } from "lucide-react";
+import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { DomainCard } from "@/components/dashboard/DomainCard";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { TOGAFProgress } from "@/components/dashboard/TOGAFProgress";
+import { UserDashboard } from "@/components/dashboard/UserDashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
+  const { profile, canCreate } = useAuth();
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
         {/* Welcome Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Architecture Dashboard</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Welcome back, {profile?.full_name?.split(' ')[0] || 'Architect'}
+            </h1>
             <p className="text-muted-foreground mt-1">
               Enterprise Architecture Platform · Digital Transformation Initiative
             </p>
           </div>
           <div className="flex gap-3">
             <Button variant="outline">Export Report</Button>
-            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
-              New Artifact
-            </Button>
+            {canCreate && (
+              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                New Artifact
+              </Button>
+            )}
           </div>
         </div>
 
@@ -197,9 +204,10 @@ const Index = () => {
         </div>
 
         {/* Bottom Section */}
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid lg:grid-cols-3 gap-6">
           <TOGAFProgress />
           <RecentActivity />
+          <UserDashboard />
         </div>
       </div>
     </AppLayout>

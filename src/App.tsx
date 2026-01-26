@@ -3,7 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
+import AuthPage from "./pages/AuthPage";
 import TOGAFPage from "./pages/TOGAFPage";
 import ZachmanPage from "./pages/ZachmanPage";
 import DoDAFPage from "./pages/DoDAFPage";
@@ -16,28 +19,75 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/togaf" element={<TOGAFPage />} />
-          <Route path="/zachman" element={<ZachmanPage />} />
-          <Route path="/dodaf" element={<DoDAFPage />} />
-          <Route path="/feaf" element={<FEAFPage />} />
-          <Route path="/repository/:domain" element={<RepositoryPage />} />
-          <Route path="/roles" element={<RolesPage />} />
-          {/* Placeholder routes */}
-          <Route path="/diagrams" element={<Index />} />
-          <Route path="/requirements" element={<Index />} />
-          <Route path="/governance" element={<Index />} />
-          <Route path="/settings" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/togaf" element={
+              <ProtectedRoute>
+                <TOGAFPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/zachman" element={
+              <ProtectedRoute>
+                <ZachmanPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dodaf" element={
+              <ProtectedRoute>
+                <DoDAFPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/feaf" element={
+              <ProtectedRoute>
+                <FEAFPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/repository/:domain" element={
+              <ProtectedRoute>
+                <RepositoryPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/roles" element={
+              <ProtectedRoute requiredRole="enterprise_architect">
+                <RolesPage />
+              </ProtectedRoute>
+            } />
+            {/* Placeholder routes */}
+            <Route path="/diagrams" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/requirements" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/governance" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </AuthProvider>
   </QueryClientProvider>
 );
 
