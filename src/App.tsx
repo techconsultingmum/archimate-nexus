@@ -13,6 +13,7 @@ import DoDAFPage from "./pages/DoDAFPage";
 import FEAFPage from "./pages/FEAFPage";
 import RepositoryPage from "./pages/RepositoryPage";
 import RolesPage from "./pages/RolesPage";
+import UserManagementPage from "./pages/UserManagementPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -57,8 +58,13 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/roles" element={
-              <ProtectedRoute requiredRole="enterprise_architect">
+              <ProtectedRoute>
                 <RolesPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/users" element={
+              <ProtectedRoute requiredRole="enterprise_architect">
+                <UserManagementPage />
               </ProtectedRoute>
             } />
             {/* Placeholder routes */}

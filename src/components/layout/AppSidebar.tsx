@@ -54,6 +54,7 @@ const toolItems = [
 
 const roleItems = [
   { title: "Role Dashboard", url: "/roles", icon: UserCircle },
+  { title: "User Management", url: "/users", icon: Users },
 ];
 
 export function AppSidebar() {
