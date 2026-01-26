@@ -1,4 +1,4 @@
-import { Bell, Search, User, HelpCircle } from "lucide-react";
+import { Bell, Search, HelpCircle, LogOut, Settings, User as UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,8 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import { ROLE_LABELS } from "@/types/auth";
+import { useNavigate } from "react-router-dom";
 
 export function AppHeader() {
+  const { profile, primaryRole, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
+
   return (
     <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
       {/* Search */}
@@ -39,23 +50,33 @@ export function AppHeader() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="gap-2 pl-2 pr-3">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <User className="h-4 w-4 text-primary-foreground" />
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <span className="text-sm font-semibold text-primary-foreground">
+                  {profile?.full_name?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
               </div>
               <div className="text-left hidden md:block">
-                <p className="text-sm font-medium">John Architect</p>
-                <p className="text-xs text-muted-foreground">Enterprise Architect</p>
+                <p className="text-sm font-medium">{profile?.full_name || 'User'}</p>
+                <p className="text-xs text-muted-foreground">{ROLE_LABELS[primaryRole]}</p>
               </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Preferences</DropdownMenuItem>
-            <DropdownMenuItem>Team Settings</DropdownMenuItem>
+            <DropdownMenuItem>
+              <UserIcon className="mr-2 h-4 w-4" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              Preferences
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive">Sign out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
