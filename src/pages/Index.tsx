@@ -1,4 +1,6 @@
-import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users, Download, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { DomainCard } from "@/components/dashboard/DomainCard";
@@ -9,9 +11,119 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+interface DomainStats {
+  domain: string;
+  count: number;
+}
 
 const Index = () => {
+  const navigate = useNavigate();
   const { profile, canCreate } = useAuth();
+  const { toast } = useToast();
+  const [stats, setStats] = useState({
+    totalArtifacts: 0,
+    draftCount: 0,
+    approvedCount: 0,
+    domainCounts: {} as Record<string, number>,
+  });
+  const [loading, setLoading] = useState(true);
+  const [exporting, setExporting] = useState(false);
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('architecture_artifacts')
+        .select('domain, status');
+
+      if (error) throw error;
+
+      const artifacts = data || [];
+      const domainCounts: Record<string, number> = {};
+      let draftCount = 0;
+      let approvedCount = 0;
+
+      artifacts.forEach((a) => {
+        domainCounts[a.domain] = (domainCounts[a.domain] || 0) + 1;
+        if (a.status === 'draft') draftCount++;
+        if (a.status === 'approved') approvedCount++;
+      });
+
+      setStats({
+        totalArtifacts: artifacts.length,
+        draftCount,
+        approvedCount,
+        domainCounts,
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleExportReport = async () => {
+    try {
+      setExporting(true);
+      const { data, error } = await supabase
+        .from('architecture_artifacts')
+        .select('*')
+        .order('domain', { ascending: true });
+
+      if (error) throw error;
+
+      // Create CSV content
+      const headers = ['Name', 'Domain', 'Type', 'Status', 'Version', 'Description', 'Tags', 'Created At', 'Updated At'];
+      const rows = (data || []).map(a => [
+        a.name,
+        a.domain,
+        a.artifact_type,
+        a.status,
+        a.version,
+        a.description || '',
+        (a.tags || []).join('; '),
+        new Date(a.created_at).toISOString(),
+        new Date(a.updated_at).toISOString(),
+      ]);
+
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      ].join('\n');
+
+      // Download file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `architecture-artifacts-${new Date().toISOString().split('T')[0]}.csv`;
+      link.click();
+
+      toast({
+        title: "Export successful",
+        description: `Exported ${data?.length || 0} artifacts to CSV`,
+      });
+    } catch (error) {
+      console.error('Error exporting:', error);
+      toast({
+        title: "Export failed",
+        description: "Failed to export artifacts",
+        variant: "destructive",
+      });
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const complianceRate = stats.totalArtifacts > 0 
+    ? Math.round((stats.approvedCount / stats.totalArtifacts) * 100) 
+    : 0;
+
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -26,9 +138,19 @@ const Index = () => {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline">Export Report</Button>
+            <Button variant="outline" onClick={handleExportReport} disabled={exporting}>
+              {exporting ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4 mr-2" />
+              )}
+              Export Report
+            </Button>
             {canCreate && (
-              <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+              <Button 
+                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                onClick={() => navigate('/repository/business')}
+              >
                 New Artifact
               </Button>
             )}
@@ -39,27 +161,27 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Artifacts"
-            value="1,547"
+            value={loading ? "..." : stats.totalArtifacts.toLocaleString()}
             icon={<Layers className="h-5 w-5 text-primary" />}
-            trend={{ value: 18, label: "this month" }}
+            trend={{ value: stats.totalArtifacts, label: "in repository" }}
           />
           <StatCard
-            title="Requirements"
-            value="428"
+            title="Draft Artifacts"
+            value={loading ? "..." : stats.draftCount.toLocaleString()}
             icon={<Target className="h-5 w-5 text-domain-business" />}
-            trend={{ value: 12, label: "linked" }}
+            trend={{ value: stats.draftCount, label: "pending review" }}
           />
           <StatCard
-            title="Open Gaps"
-            value="19"
-            icon={<AlertTriangle className="h-5 w-5 text-amber-500" />}
-            trend={{ value: -23, label: "vs last week" }}
+            title="Approved"
+            value={loading ? "..." : stats.approvedCount.toLocaleString()}
+            icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+            trend={{ value: stats.approvedCount, label: "artifacts" }}
           />
           <StatCard
             title="Compliance"
-            value="96%"
+            value={loading ? "..." : `${complianceRate}%`}
             icon={<CheckCircle className="h-5 w-5 text-green-500" />}
-            trend={{ value: 4, label: "improvement" }}
+            trend={{ value: complianceRate, label: "approved rate" }}
           />
         </div>
 
@@ -133,9 +255,7 @@ const Index = () => {
               description="Business capabilities, processes, and organizational structures"
               icon={<Building2 className="h-6 w-6" />}
               stats={[
-                { label: "Capabilities", value: 48 },
-                { label: "Processes", value: 156 },
-                { label: "Actors", value: 32 },
+                { label: "Artifacts", value: stats.domainCounts['business'] || 0 },
               ]}
               href="/repository/business"
               variant="business"
@@ -145,9 +265,7 @@ const Index = () => {
               description="Data entities, relationships, and information flows"
               icon={<Database className="h-6 w-6" />}
               stats={[
-                { label: "Entities", value: 234 },
-                { label: "Data Flows", value: 89 },
-                { label: "Schemas", value: 12 },
+                { label: "Artifacts", value: stats.domainCounts['data'] || 0 },
               ]}
               href="/repository/data"
               variant="data"
@@ -157,9 +275,7 @@ const Index = () => {
               description="Applications, services, and integrations"
               icon={<AppWindow className="h-6 w-6" />}
               stats={[
-                { label: "Applications", value: 67 },
-                { label: "Services", value: 142 },
-                { label: "APIs", value: 89 },
+                { label: "Artifacts", value: stats.domainCounts['application'] || 0 },
               ]}
               href="/repository/application"
               variant="application"
@@ -169,9 +285,7 @@ const Index = () => {
               description="Infrastructure, platforms, and technology standards"
               icon={<Server className="h-6 w-6" />}
               stats={[
-                { label: "Platforms", value: 8 },
-                { label: "Components", value: 312 },
-                { label: "Standards", value: 45 },
+                { label: "Artifacts", value: stats.domainCounts['technology'] || 0 },
               ]}
               href="/repository/technology"
               variant="technology"
@@ -181,9 +295,7 @@ const Index = () => {
               description="AI/ML models, pipelines, and intelligent systems"
               icon={<Brain className="h-6 w-6" />}
               stats={[
-                { label: "Models", value: 24 },
-                { label: "Pipelines", value: 18 },
-                { label: "Datasets", value: 56 },
+                { label: "Artifacts", value: stats.domainCounts['ai'] || 0 },
               ]}
               href="/repository/ai"
               variant="ai"
@@ -193,9 +305,7 @@ const Index = () => {
               description="Cloud infrastructure, services, and deployment patterns"
               icon={<Cloud className="h-6 w-6" />}
               stats={[
-                { label: "Environments", value: 6 },
-                { label: "Services", value: 89 },
-                { label: "Resources", value: 234 },
+                { label: "Artifacts", value: stats.domainCounts['cloud'] || 0 },
               ]}
               href="/repository/cloud"
               variant="cloud"

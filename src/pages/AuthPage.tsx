@@ -11,7 +11,10 @@ import { Layers, AlertCircle, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
-const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
+const passwordSchema = z.string().min(8, 'Password must be at least 8 characters')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+  .regex(/[0-9]/, 'Password must contain at least one number');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
 
 export default function AuthPage() {
@@ -29,6 +32,7 @@ export default function AuthPage() {
   // Signup form
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [signupName, setSignupName] = useState('');
 
   useEffect(() => {
@@ -69,6 +73,12 @@ export default function AuthPage() {
     setError(null);
     setSuccess(null);
     
+    // Validate password confirmation
+    if (signupPassword !== signupConfirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    
     try {
       emailSchema.parse(signupEmail);
       passwordSchema.parse(signupPassword);
@@ -94,6 +104,7 @@ export default function AuthPage() {
       setSuccess('Account created successfully! You can now sign in.');
       setSignupEmail('');
       setSignupPassword('');
+      setSignupConfirmPassword('');
       setSignupName('');
     }
   };
@@ -214,6 +225,21 @@ export default function AuthPage() {
                     placeholder="••••••••"
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
+                    disabled={isLoading}
+                    required
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Min 8 chars, with uppercase, lowercase, and number
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="signup-confirm-password">Confirm Password</Label>
+                  <Input
+                    id="signup-confirm-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={signupConfirmPassword}
+                    onChange={(e) => setSignupConfirmPassword(e.target.value)}
                     disabled={isLoading}
                     required
                   />
