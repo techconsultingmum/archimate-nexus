@@ -286,6 +286,16 @@ const UserManagementPage = () => {
               <div className="flex items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
               </div>
+            ) : filteredUsers.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <Users className="h-12 w-12 text-muted-foreground mb-4" />
+                <h3 className="font-semibold text-lg mb-2">No users found</h3>
+                <p className="text-muted-foreground text-sm max-w-md">
+                  {searchTerm 
+                    ? "No users match your search criteria. Try a different search term."
+                    : "No users have registered yet."}
+                </p>
+              </div>
             ) : (
               <Table>
                 <TableHeader>

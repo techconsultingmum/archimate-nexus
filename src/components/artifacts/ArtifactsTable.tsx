@@ -31,6 +31,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { ArtifactForm } from "./ArtifactForm";
+import { ArtifactDetailSheet } from "./ArtifactDetailSheet";
 import {
   ArchitectureArtifact,
   ArchitectureDomain,
@@ -63,6 +64,8 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedArtifact, setSelectedArtifact] = useState<ArchitectureArtifact | null>(null);
   const [deleteArtifact, setDeleteArtifact] = useState<ArchitectureArtifact | null>(null);
+  const [viewArtifact, setViewArtifact] = useState<ArchitectureArtifact | null>(null);
+  const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
 
   const hasDomainAccess = canAccessDomain(domain);
 
@@ -240,7 +243,10 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => {
+                            setViewArtifact(artifact);
+                            setIsDetailSheetOpen(true);
+                          }}>
                             <Eye className="h-4 w-4 mr-2" />
                             View Details
                           </DropdownMenuItem>
@@ -277,6 +283,22 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
         onSuccess={fetchArtifacts}
         domain={domain}
         artifact={selectedArtifact}
+      />
+
+      {/* Artifact Detail Sheet */}
+      <ArtifactDetailSheet
+        artifact={viewArtifact}
+        isOpen={isDetailSheetOpen}
+        onClose={() => {
+          setIsDetailSheetOpen(false);
+          setViewArtifact(null);
+        }}
+        onEdit={() => {
+          setSelectedArtifact(viewArtifact);
+          setIsDetailSheetOpen(false);
+          setIsFormOpen(true);
+        }}
+        canEdit={canEdit && hasDomainAccess}
       />
 
       {/* Delete Confirmation */}
