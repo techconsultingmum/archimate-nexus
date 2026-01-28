@@ -14,6 +14,10 @@ import FEAFPage from "./pages/FEAFPage";
 import RepositoryPage from "./pages/RepositoryPage";
 import RolesPage from "./pages/RolesPage";
 import UserManagementPage from "./pages/UserManagementPage";
+import DiagramsPage from "./pages/DiagramsPage";
+import RequirementsPage from "./pages/RequirementsPage";
+import GovernancePage from "./pages/GovernancePage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,25 +71,24 @@ const App = () => (
                 <UserManagementPage />
               </ProtectedRoute>
             } />
-            {/* Placeholder routes */}
             <Route path="/diagrams" element={
               <ProtectedRoute>
-                <Index />
+                <DiagramsPage />
               </ProtectedRoute>
             } />
             <Route path="/requirements" element={
               <ProtectedRoute>
-                <Index />
+                <RequirementsPage />
               </ProtectedRoute>
             } />
             <Route path="/governance" element={
               <ProtectedRoute>
-                <Index />
+                <GovernancePage />
               </ProtectedRoute>
             } />
             <Route path="/settings" element={
               <ProtectedRoute>
-                <Index />
+                <SettingsPage />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

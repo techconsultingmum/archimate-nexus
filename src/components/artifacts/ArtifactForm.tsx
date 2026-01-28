@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -44,7 +44,7 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const [formData, setFormData] = useState({
+  const getInitialFormData = () => ({
     name: artifact?.name || '',
     description: artifact?.description || '',
     artifact_type: artifact?.artifact_type || DOMAIN_ARTIFACT_TYPES[domain][0],
@@ -52,6 +52,15 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
     version: artifact?.version || '1.0',
     tags: artifact?.tags?.join(', ') || '',
   });
+
+  const [formData, setFormData] = useState(getInitialFormData());
+
+  // Reset form when artifact changes or dialog opens/closes
+  React.useEffect(() => {
+    if (isOpen) {
+      setFormData(getInitialFormData());
+    }
+  }, [isOpen, artifact, domain]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
