@@ -133,16 +133,16 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
   return (
     <>
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>{DOMAIN_LABELS[domain]} Architecture Artifacts</CardTitle>
-              <CardDescription>
-                Manage {domain} architecture components and capabilities
+              <CardTitle className="text-lg sm:text-xl">{DOMAIN_LABELS[domain]} Artifacts</CardTitle>
+              <CardDescription className="text-sm">
+                Manage {domain} architecture components
               </CardDescription>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="relative w-64">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+              <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search artifacts..."
@@ -152,7 +152,10 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
                 />
               </div>
               {canCreate && hasDomainAccess && (
-                <Button onClick={() => { setSelectedArtifact(null); setIsFormOpen(true); }}>
+                <Button 
+                  onClick={() => { setSelectedArtifact(null); setIsFormOpen(true); }}
+                  className="w-full sm:w-auto"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   New Artifact
                 </Button>
@@ -180,98 +183,115 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
               )}
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Version</TableHead>
-                  <TableHead>Tags</TableHead>
-                  <TableHead>Updated</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredArtifacts.map((artifact) => (
-                  <TableRow key={artifact.id}>
-                    <TableCell>
-                      <div>
-                        <p className="font-medium">{artifact.name}</p>
-                        {artifact.description && (
-                          <p className="text-xs text-muted-foreground line-clamp-1">
-                            {artifact.description}
-                          </p>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">
-                        {ARTIFACT_TYPE_LABELS[artifact.artifact_type]}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={STATUS_COLORS[artifact.status]} variant="outline">
-                        {STATUS_LABELS[artifact.status]}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      v{artifact.version}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex flex-wrap gap-1">
-                        {artifact.tags?.slice(0, 2).map((tag, idx) => (
-                          <Badge key={idx} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                        {artifact.tags?.length > 2 && (
-                          <Badge variant="secondary" className="text-xs">
-                            +{artifact.tags.length - 2}
-                          </Badge>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {new Date(artifact.updated_at).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => {
-                            setViewArtifact(artifact);
-                            setIsDetailSheetOpen(true);
-                          }}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </DropdownMenuItem>
-                          {canEdit && hasDomainAccess && (
-                            <DropdownMenuItem onClick={() => { setSelectedArtifact(artifact); setIsFormOpen(true); }}>
-                              <Pencil className="h-4 w-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                          )}
-                          {canDelete && (
-                            <DropdownMenuItem 
-                              className="text-destructive"
-                              onClick={() => setDeleteArtifact(artifact)}
-                            >
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="hidden sm:table-cell">Type</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="hidden md:table-cell">Version</TableHead>
+                    <TableHead className="hidden lg:table-cell">Tags</TableHead>
+                    <TableHead className="hidden sm:table-cell">Updated</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredArtifacts.map((artifact) => (
+                    <TableRow key={artifact.id}>
+                      <TableCell>
+                        <div>
+                          <p className="font-medium">{artifact.name}</p>
+                          {artifact.description && (
+                            <p className="text-xs text-muted-foreground line-clamp-1">
+                              {artifact.description}
+                            </p>
+                          )}
+                          {/* Mobile-only: Show type and date inline */}
+                          <div className="sm:hidden flex items-center gap-2 mt-1">
+                            <Badge variant="outline" className="text-xs">
+                              {ARTIFACT_TYPE_LABELS[artifact.artifact_type]}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(artifact.updated_at).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell">
+                        <Badge variant="outline">
+                          {ARTIFACT_TYPE_LABELS[artifact.artifact_type]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={STATUS_COLORS[artifact.status]} variant="outline">
+                          {STATUS_LABELS[artifact.status]}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell text-muted-foreground">
+                        v{artifact.version}
+                      </TableCell>
+                      <TableCell className="hidden lg:table-cell">
+                        <div className="flex flex-wrap gap-1">
+                          {artifact.tags?.slice(0, 2).map((tag, idx) => (
+                            <Badge key={idx} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {(artifact.tags?.length || 0) > 2 && (
+                            <Badge variant="secondary" className="text-xs">
+                              +{(artifact.tags?.length || 0) - 2}
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="hidden sm:table-cell text-muted-foreground">
+                        {new Date(artifact.updated_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-popover border-border z-50">
+                            <DropdownMenuItem 
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setViewArtifact(artifact);
+                                setIsDetailSheetOpen(true);
+                              }}
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </DropdownMenuItem>
+                            {canEdit && hasDomainAccess && (
+                              <DropdownMenuItem 
+                                className="cursor-pointer"
+                                onClick={() => { setSelectedArtifact(artifact); setIsFormOpen(true); }}
+                              >
+                                <Pencil className="h-4 w-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                            )}
+                            {canDelete && (
+                              <DropdownMenuItem 
+                                className="text-destructive cursor-pointer focus:text-destructive"
+                                onClick={() => setDeleteArtifact(artifact)}
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

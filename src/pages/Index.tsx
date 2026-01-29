@@ -126,30 +126,38 @@ const Index = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Welcome Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Welcome back, {profile?.full_name?.split(' ')[0] || 'Architect'}
             </h1>
-            <p className="text-muted-foreground mt-1">
-              Enterprise Architecture Platform · Digital Transformation Initiative
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
+              Enterprise Architecture Platform
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline" onClick={handleExportReport} disabled={exporting}>
+          <div className="flex gap-2 sm:gap-3">
+            <Button 
+              variant="outline" 
+              onClick={handleExportReport} 
+              disabled={exporting}
+              size="sm"
+              className="flex-1 sm:flex-none"
+            >
               {exporting ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
               ) : (
                 <Download className="h-4 w-4 mr-2" />
               )}
-              Export Report
+              <span className="hidden sm:inline">Export Report</span>
+              <span className="sm:hidden">Export</span>
             </Button>
             {canCreate && (
               <Button 
-                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                className="bg-accent hover:bg-accent/90 text-accent-foreground flex-1 sm:flex-none"
                 onClick={() => navigate('/repository/business')}
+                size="sm"
               >
                 New Artifact
               </Button>
