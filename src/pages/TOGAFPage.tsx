@@ -10,27 +10,28 @@ const TOGAFPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">TOGAF ADM</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">TOGAF ADM</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Architecture Development Method lifecycle management
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              <span className="hidden sm:inline">Export</span>
             </Button>
             <Button variant="outline" size="sm">
               <Settings className="h-4 w-4 mr-2" />
-              Configure
+              <span className="hidden sm:inline">Configure</span>
             </Button>
             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Plus className="h-4 w-4 mr-2" />
-              New Deliverable
+              <span className="hidden sm:inline">New Deliverable</span>
+              <span className="sm:hidden">New</span>
             </Button>
           </div>
         </div>

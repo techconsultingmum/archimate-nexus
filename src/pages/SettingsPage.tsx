@@ -65,36 +65,36 @@ const SettingsPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-4xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-4xl mx-auto">
         {/* Header */}
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <Settings className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+            <Settings className="h-6 sm:h-8 w-6 sm:w-8 text-primary" />
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             Manage your account settings and preferences
           </p>
         </div>
 
         {/* Settings Tabs */}
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid grid-cols-4 w-full max-w-md">
-            <TabsTrigger value="profile" className="gap-2">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-4 w-full">
+            <TabsTrigger value="profile" className="gap-2 text-xs sm:text-sm">
               <User className="h-4 w-4" />
-              Profile
+              <span className="hidden xs:inline">Profile</span>
             </TabsTrigger>
-            <TabsTrigger value="notifications" className="gap-2">
+            <TabsTrigger value="notifications" className="gap-2 text-xs sm:text-sm">
               <Bell className="h-4 w-4" />
-              Notifications
+              <span className="hidden xs:inline">Notifications</span>
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="gap-2">
+            <TabsTrigger value="appearance" className="gap-2 text-xs sm:text-sm">
               <Palette className="h-4 w-4" />
-              Appearance
+              <span className="hidden xs:inline">Appearance</span>
             </TabsTrigger>
-            <TabsTrigger value="security" className="gap-2">
+            <TabsTrigger value="security" className="gap-2 text-xs sm:text-sm">
               <Shield className="h-4 w-4" />
-              Security
+              <span className="hidden xs:inline">Security</span>
             </TabsTrigger>
           </TabsList>
 
