@@ -44,21 +44,26 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const getInitialFormData = () => ({
-    name: artifact?.name || '',
-    description: artifact?.description || '',
-    artifact_type: artifact?.artifact_type || DOMAIN_ARTIFACT_TYPES[domain][0],
-    status: artifact?.status || 'draft' as ArtifactStatus,
-    version: artifact?.version || '1.0',
-    tags: artifact?.tags?.join(', ') || '',
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    artifact_type: DOMAIN_ARTIFACT_TYPES[domain][0],
+    status: 'draft' as ArtifactStatus,
+    version: '1.0',
+    tags: '',
   });
-
-  const [formData, setFormData] = useState(getInitialFormData());
 
   // Reset form when artifact changes or dialog opens/closes
   React.useEffect(() => {
     if (isOpen) {
-      setFormData(getInitialFormData());
+      setFormData({
+        name: artifact?.name || '',
+        description: artifact?.description || '',
+        artifact_type: artifact?.artifact_type || DOMAIN_ARTIFACT_TYPES[domain][0],
+        status: artifact?.status || 'draft' as ArtifactStatus,
+        version: artifact?.version || '1.0',
+        tags: artifact?.tags?.join(', ') || '',
+      });
     }
   }, [isOpen, artifact, domain]);
 

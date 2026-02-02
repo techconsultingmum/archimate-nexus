@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Bell, Search, HelpCircle, LogOut, Settings, User as UserIcon, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -22,11 +22,25 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { AppSidebarMobile } from "./AppSidebarMobile";
+import { SearchDialog } from "./SearchDialog";
 
 export function AppHeader() {
   const { profile, primaryRole, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut();
@@ -56,13 +70,19 @@ export function AppHeader() {
       </Sheet>
 
       {/* Search - hidden on mobile, visible on tablet+ */}
-      <div className="relative hidden sm:block sm:w-64 lg:w-96">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search artifacts..."
-          className="pl-10 bg-secondary/50 border-0 focus-visible:ring-accent"
-        />
-      </div>
+      <button
+        onClick={() => setSearchOpen(true)}
+        className="relative hidden sm:flex items-center sm:w-64 lg:w-96 h-10 px-3 rounded-md bg-secondary/50 border-0 hover:bg-secondary transition-colors cursor-pointer"
+      >
+        <Search className="h-4 w-4 text-muted-foreground mr-2" />
+        <span className="text-muted-foreground text-sm flex-1 text-left">Search artifacts...</span>
+        <kbd className="pointer-events-none hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+          <span className="text-xs">⌘</span>K
+        </kbd>
+      </button>
+
+      {/* Search Dialog */}
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
 
       {/* Spacer for mobile */}
       <div className="flex-1 sm:hidden" />
@@ -70,7 +90,12 @@ export function AppHeader() {
       {/* Right side */}
       <div className="flex items-center gap-1 sm:gap-2">
         {/* Mobile search button */}
-        <Button variant="ghost" size="icon" className="sm:hidden text-muted-foreground hover:text-foreground">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="sm:hidden text-muted-foreground hover:text-foreground"
+          onClick={() => setSearchOpen(true)}
+        >
           <Search className="h-5 w-5" />
         </Button>
 

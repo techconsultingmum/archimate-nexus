@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,8 +27,8 @@ const SettingsPage = () => {
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
   const [profileData, setProfileData] = useState({
-    fullName: profile?.full_name || "",
-    email: profile?.email || "",
+    fullName: "",
+    email: "",
   });
   const [notifications, setNotifications] = useState({
     emailNotifications: true,
@@ -36,6 +36,22 @@ const SettingsPage = () => {
     changeNotifications: false,
     weeklyDigest: true,
   });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordErrors, setPasswordErrors] = useState<string | null>(null);
+
+  // Sync profile data when it changes
+  useEffect(() => {
+    if (profile) {
+      setProfileData({
+        fullName: profile.full_name || "",
+        email: profile.email || "",
+      });
+    }
+  }, [profile]);
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -314,12 +330,91 @@ const SettingsPage = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <Label>Change Password</Label>
+                  {passwordErrors && (
+                    <p className="text-sm text-destructive">{passwordErrors}</p>
+                  )}
                   <div className="grid gap-3">
-                    <Input type="password" placeholder="Current password" />
-                    <Input type="password" placeholder="New password" />
-                    <Input type="password" placeholder="Confirm new password" />
+                    <Input
+                      type="password"
+                      placeholder="Current password"
+                      value={passwordData.currentPassword}
+                      onChange={(e) =>
+                        setPasswordData((prev) => ({ ...prev, currentPassword: e.target.value }))
+                      }
+                    />
+                    <Input
+                      type="password"
+                      placeholder="New password (min 8 chars, uppercase, lowercase, number)"
+                      value={passwordData.newPassword}
+                      onChange={(e) =>
+                        setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))
+                      }
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Confirm new password"
+                      value={passwordData.confirmPassword}
+                      onChange={(e) =>
+                        setPasswordData((prev) => ({ ...prev, confirmPassword: e.target.value }))
+                      }
+                    />
                   </div>
-                  <Button variant="outline">Update Password</Button>
+                  <Button
+                    variant="outline"
+                    onClick={async () => {
+                      setPasswordErrors(null);
+                      
+                      if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+                        setPasswordErrors("All fields are required");
+                        return;
+                      }
+                      
+                      if (passwordData.newPassword.length < 8) {
+                        setPasswordErrors("New password must be at least 8 characters");
+                        return;
+                      }
+                      
+                      if (!/[A-Z]/.test(passwordData.newPassword)) {
+                        setPasswordErrors("New password must contain at least one uppercase letter");
+                        return;
+                      }
+                      
+                      if (!/[a-z]/.test(passwordData.newPassword)) {
+                        setPasswordErrors("New password must contain at least one lowercase letter");
+                        return;
+                      }
+                      
+                      if (!/[0-9]/.test(passwordData.newPassword)) {
+                        setPasswordErrors("New password must contain at least one number");
+                        return;
+                      }
+                      
+                      if (passwordData.newPassword !== passwordData.confirmPassword) {
+                        setPasswordErrors("Passwords do not match");
+                        return;
+                      }
+
+                      try {
+                        const { error } = await supabase.auth.updateUser({
+                          password: passwordData.newPassword,
+                        });
+
+                        if (error) throw error;
+
+                        toast({
+                          title: "Password updated",
+                          description: "Your password has been changed successfully.",
+                        });
+                        
+                        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+                      } catch (error) {
+                        console.error("Error updating password:", error);
+                        setPasswordErrors("Failed to update password. Please try again.");
+                      }
+                    }}
+                  >
+                    Update Password
+                  </Button>
                 </div>
 
                 <Separator />
@@ -329,7 +424,9 @@ const SettingsPage = () => {
                   <p className="text-sm text-muted-foreground">
                     Add an extra layer of security to your account
                   </p>
-                  <Button variant="outline">Enable 2FA</Button>
+                  <Button variant="outline" disabled>
+                    Enable 2FA (Coming Soon)
+                  </Button>
                 </div>
 
                 <Separator />

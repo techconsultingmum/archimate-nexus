@@ -289,27 +289,29 @@ const RolesPage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between gap-4 py-8">
+              <div className="flex items-center justify-center gap-2 py-8">
                   {[
                     { step: 1, title: "Draft", icon: Clock, status: "completed" },
                     { step: 2, title: "Review", icon: Users, status: "completed" },
                     { step: 3, title: "Approval", icon: CheckCircle, status: "current" },
                     { step: 4, title: "Published", icon: Server, status: "pending" },
-                  ].map((step, idx) => (
-                    <div key={idx} className="flex flex-col items-center flex-1">
-                      <div
-                        className={`w-14 h-14 rounded-full flex items-center justify-center ${
-                          step.status === "completed" ? "bg-accent text-accent-foreground" :
-                          step.status === "current" ? "bg-primary text-primary-foreground" :
-                          "bg-muted text-muted-foreground"
-                        }`}
-                      >
-                        <step.icon className="h-6 w-6" />
+                  ].map((step, idx, arr) => (
+                    <div key={idx} className="flex items-center">
+                      <div className="flex flex-col items-center">
+                        <div
+                          className={`w-14 h-14 rounded-full flex items-center justify-center ${
+                            step.status === "completed" ? "bg-accent text-accent-foreground" :
+                            step.status === "current" ? "bg-primary text-primary-foreground" :
+                            "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          <step.icon className="h-6 w-6" />
+                        </div>
+                        <span className="mt-2 font-medium text-sm">{step.title}</span>
+                        <span className="text-xs text-muted-foreground capitalize">{step.status}</span>
                       </div>
-                      <span className="mt-2 font-medium text-sm">{step.title}</span>
-                      <span className="text-xs text-muted-foreground capitalize">{step.status}</span>
-                      {idx < 3 && (
-                        <div className="absolute ml-[200px] w-[calc(25%-40px)] h-0.5 bg-border" />
+                      {idx < arr.length - 1 && (
+                        <div className="w-12 sm:w-20 h-0.5 bg-border mx-2 mt-[-2rem]" />
                       )}
                     </div>
                   ))}
