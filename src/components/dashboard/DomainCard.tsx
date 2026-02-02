@@ -37,13 +37,11 @@ export function DomainCard({ title, description, icon, stats, href, variant }: D
         </div>
       </div>
       
-      <div className="mt-4 pt-4 border-t border-border grid grid-cols-3 gap-4">
-        {stats.map((stat) => (
-          <div key={stat.label}>
-            <p className="text-2xl font-bold">{stat.value}</p>
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
-          </div>
-        ))}
+      <div className="mt-4 pt-4 border-t border-border">
+        <div className="flex items-baseline gap-2">
+          <p className="text-2xl font-bold">{stats[0]?.value ?? 0}</p>
+          <p className="text-sm text-muted-foreground">{stats[0]?.label}</p>
+        </div>
       </div>
     </Link>
   );
