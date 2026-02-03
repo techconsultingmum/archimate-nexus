@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Building2,
   Briefcase,
@@ -14,7 +15,6 @@ import {
   Users,
   CheckCircle,
   Clock,
-  AlertTriangle,
   ArrowRight,
 } from "lucide-react";
 
@@ -136,39 +136,39 @@ const architectRoles = [
 const RolesPage = () => {
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Architect Roles</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Architect Roles</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Role-specific dashboards and responsibilities
             </p>
           </div>
-          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto">
             Manage Permissions
           </Button>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="overview">Role Overview</TabsTrigger>
-            <TabsTrigger value="matrix">Responsibility Matrix</TabsTrigger>
-            <TabsTrigger value="workflows">Workflows</TabsTrigger>
+          <TabsList className="w-full sm:w-auto">
+            <TabsTrigger value="overview" className="text-xs sm:text-sm">Role Overview</TabsTrigger>
+            <TabsTrigger value="matrix" className="text-xs sm:text-sm">RACI Matrix</TabsTrigger>
+            <TabsTrigger value="workflows" className="text-xs sm:text-sm">Workflows</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
             {/* Role Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {architectRoles.map((role) => (
                 <Card key={role.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className={`w-12 h-12 rounded-lg ${role.color} flex items-center justify-center`}>
-                        <role.icon className="h-6 w-6 text-white" />
+                    <div className="flex items-start justify-between gap-2">
+                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${role.color} flex items-center justify-center shrink-0`}>
+                        <role.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-1 justify-end">
                         <Badge variant="secondary" className="text-xs">
                           {role.activeProjects} active
                         </Badge>
@@ -179,8 +179,8 @@ const RolesPage = () => {
                         )}
                       </div>
                     </div>
-                    <CardTitle className="mt-3">{role.title}</CardTitle>
-                    <CardDescription className="text-sm">{role.description}</CardDescription>
+                    <CardTitle className="mt-3 text-base sm:text-lg">{role.title}</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm">{role.description}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
@@ -217,60 +217,64 @@ const RolesPage = () => {
           <TabsContent value="matrix">
             <Card>
               <CardHeader>
-                <CardTitle>Responsibility Assignment Matrix (RACI)</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">Responsibility Assignment Matrix (RACI)</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   Defines the role each architect plays in key architecture activities
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left p-3 font-medium">Activity</th>
-                        {architectRoles.slice(0, 5).map((role) => (
-                          <th key={role.id} className="text-center p-3 font-medium">
-                            {role.title.replace(" Architect", "")}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {[
-                        { activity: "Architecture Vision", values: ["A", "R", "C", "C", "R"] },
-                        { activity: "Business Capability Modeling", values: ["A", "C", "I", "C", "R"] },
-                        { activity: "Solution Design", values: ["A", "R", "C", "C", "C"] },
-                        { activity: "Data Architecture", values: ["A", "C", "C", "R", "I"] },
-                        { activity: "Application Design", values: ["A", "R", "R", "C", "I"] },
-                        { activity: "Integration Patterns", values: ["A", "R", "R", "C", "I"] },
-                        { activity: "Governance Reviews", values: ["R", "C", "C", "C", "C"] },
-                      ].map((row, idx) => (
-                        <tr key={idx} className="border-b hover:bg-muted/50">
-                          <td className="p-3 font-medium">{row.activity}</td>
-                          {row.values.map((val, valIdx) => (
-                            <td key={valIdx} className="text-center p-3">
-                              <Badge
-                                variant={
-                                  val === "R" ? "default" :
-                                  val === "A" ? "secondary" :
-                                  "outline"
-                                }
-                                className={
-                                  val === "R" ? "bg-accent text-accent-foreground" :
-                                  val === "A" ? "bg-primary text-primary-foreground" :
-                                  ""
-                                }
-                              >
-                                {val}
-                              </Badge>
-                            </td>
+                <ScrollArea className="w-full">
+                  <div className="min-w-[600px]">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left p-3 font-medium">Activity</th>
+                          {architectRoles.slice(0, 5).map((role) => (
+                            <th key={role.id} className="text-center p-3 font-medium text-xs sm:text-sm">
+                              <span className="hidden sm:inline">{role.title.replace(" Architect", "")}</span>
+                              <span className="sm:hidden">{role.id.substring(0, 3).toUpperCase()}</span>
+                            </th>
                           ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                <div className="flex gap-6 mt-4 text-xs text-muted-foreground">
+                      </thead>
+                      <tbody>
+                        {[
+                          { activity: "Architecture Vision", values: ["A", "R", "C", "C", "R"] },
+                          { activity: "Business Capability Modeling", values: ["A", "C", "I", "C", "R"] },
+                          { activity: "Solution Design", values: ["A", "R", "C", "C", "C"] },
+                          { activity: "Data Architecture", values: ["A", "C", "C", "R", "I"] },
+                          { activity: "Application Design", values: ["A", "R", "R", "C", "I"] },
+                          { activity: "Integration Patterns", values: ["A", "R", "R", "C", "I"] },
+                          { activity: "Governance Reviews", values: ["R", "C", "C", "C", "C"] },
+                        ].map((row, idx) => (
+                          <tr key={idx} className="border-b hover:bg-muted/50">
+                            <td className="p-3 font-medium text-xs sm:text-sm">{row.activity}</td>
+                            {row.values.map((val, valIdx) => (
+                              <td key={valIdx} className="text-center p-3">
+                                <Badge
+                                  variant={
+                                    val === "R" ? "default" :
+                                    val === "A" ? "secondary" :
+                                    "outline"
+                                  }
+                                  className={
+                                    val === "R" ? "bg-accent text-accent-foreground" :
+                                    val === "A" ? "bg-primary text-primary-foreground" :
+                                    ""
+                                  }
+                                >
+                                  {val}
+                                </Badge>
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
+                <div className="flex flex-wrap gap-3 sm:gap-6 mt-4 text-xs text-muted-foreground">
                   <span><Badge className="bg-primary text-primary-foreground mr-1">A</Badge> Accountable</span>
                   <span><Badge className="bg-accent text-accent-foreground mr-1">R</Badge> Responsible</span>
                   <span><Badge variant="outline" className="mr-1">C</Badge> Consulted</span>
@@ -283,39 +287,42 @@ const RolesPage = () => {
           <TabsContent value="workflows">
             <Card>
               <CardHeader>
-                <CardTitle>Architecture Review Workflow</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">Architecture Review Workflow</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   Standard workflow for architecture reviews and approvals
                 </CardDescription>
               </CardHeader>
               <CardContent>
-              <div className="flex items-center justify-center gap-2 py-8">
-                  {[
-                    { step: 1, title: "Draft", icon: Clock, status: "completed" },
-                    { step: 2, title: "Review", icon: Users, status: "completed" },
-                    { step: 3, title: "Approval", icon: CheckCircle, status: "current" },
-                    { step: 4, title: "Published", icon: Server, status: "pending" },
-                  ].map((step, idx, arr) => (
-                    <div key={idx} className="flex items-center">
-                      <div className="flex flex-col items-center">
-                        <div
-                          className={`w-14 h-14 rounded-full flex items-center justify-center ${
-                            step.status === "completed" ? "bg-accent text-accent-foreground" :
-                            step.status === "current" ? "bg-primary text-primary-foreground" :
-                            "bg-muted text-muted-foreground"
-                          }`}
-                        >
-                          <step.icon className="h-6 w-6" />
+                <ScrollArea className="w-full">
+                  <div className="flex items-center justify-center gap-2 sm:gap-4 py-8 min-w-[500px]">
+                    {[
+                      { step: 1, title: "Draft", icon: Clock, status: "completed" },
+                      { step: 2, title: "Review", icon: Users, status: "completed" },
+                      { step: 3, title: "Approval", icon: CheckCircle, status: "current" },
+                      { step: 4, title: "Published", icon: Server, status: "pending" },
+                    ].map((step, idx, arr) => (
+                      <div key={idx} className="flex items-center">
+                        <div className="flex flex-col items-center">
+                          <div
+                            className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center ${
+                              step.status === "completed" ? "bg-accent text-accent-foreground" :
+                              step.status === "current" ? "bg-primary text-primary-foreground" :
+                              "bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            <step.icon className="h-5 w-5 sm:h-6 sm:w-6" />
+                          </div>
+                          <span className="mt-2 font-medium text-xs sm:text-sm">{step.title}</span>
+                          <span className="text-xs text-muted-foreground capitalize">{step.status}</span>
                         </div>
-                        <span className="mt-2 font-medium text-sm">{step.title}</span>
-                        <span className="text-xs text-muted-foreground capitalize">{step.status}</span>
+                        {idx < arr.length - 1 && (
+                          <div className="w-8 sm:w-16 lg:w-20 h-0.5 bg-border mx-1 sm:mx-2 -mt-8" />
+                        )}
                       </div>
-                      {idx < arr.length - 1 && (
-                        <div className="w-12 sm:w-20 h-0.5 bg-border mx-2 mt-[-2rem]" />
-                      )}
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </CardContent>
             </Card>
           </TabsContent>

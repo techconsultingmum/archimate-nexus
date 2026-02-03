@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -40,6 +41,7 @@ import {
   Users,
   Building2,
   AlertTriangle,
+  Loader2,
 } from "lucide-react";
 
 interface UserWithRoles {
@@ -210,7 +212,7 @@ const UserManagementPage = () => {
         <div className="flex flex-col items-center justify-center min-h-[60vh] p-6">
           <AlertTriangle className="h-16 w-16 text-destructive mb-4" />
           <h1 className="text-2xl font-bold">Access Denied</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-2 text-center">
             Only Enterprise Architects can access user management.
           </p>
         </div>
@@ -220,19 +222,19 @@ const UserManagementPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">User Management</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Manage users and assign architect roles
             </p>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -265,12 +267,12 @@ const UserManagementPage = () => {
         {/* Users Table */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <CardTitle>All Users</CardTitle>
                 <CardDescription>View and manage user roles and permissions</CardDescription>
               </div>
-              <div className="relative w-64">
+              <div className="relative w-full sm:w-64">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search users..."
@@ -284,7 +286,7 @@ const UserManagementPage = () => {
           <CardContent>
             {loading ? (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               </div>
             ) : filteredUsers.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -297,96 +299,111 @@ const UserManagementPage = () => {
                 </p>
               </div>
             ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>User</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Roles</TableHead>
-                    <TableHead>Domain Access</TableHead>
-                    <TableHead>Joined</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((u) => {
-                    const domains = [...new Set(u.roles.flatMap(r => ROLE_PERMISSIONS[r]?.domains || []))];
-                    
-                    return (
-                      <TableRow key={u.id}>
-                        <TableCell>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
-                              <AvatarImage src={u.avatar_url || undefined} />
-                              <AvatarFallback>
-                                {(u.full_name || u.email).charAt(0).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="font-medium">{u.full_name || 'No name'}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {u.roles.map((role) => (
-                              <Badge
-                                key={role}
-                                className={`${ROLE_COLORS[role]} text-xs cursor-pointer group`}
-                                onClick={() => {
-                                  if (u.id !== user?.id) {
-                                    handleRemoveRole(u.id, role);
-                                  }
-                                }}
-                              >
-                                {ROLE_LABELS[role]}
-                                {u.id !== user?.id && (
-                                  <Trash2 className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100" />
-                                )}
-                              </Badge>
-                            ))}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-wrap gap-1">
-                            {domains.length > 0 ? domains.map((domain) => (
-                              <Badge key={domain} variant="outline" className="text-xs capitalize">
-                                {domain}
-                              </Badge>
-                            )) : (
-                              <span className="text-xs text-muted-foreground">View only</span>
-                            )}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-muted-foreground">
-                          {new Date(u.created_at).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {u.id !== user?.id && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedUser(u);
-                                setIsRoleDialogOpen(true);
-                              }}
-                            >
-                              <UserPlus className="h-4 w-4 mr-1" />
-                              Add Role
-                            </Button>
-                          )}
-                        </TableCell>
+              <ScrollArea className="w-full">
+                <div className="min-w-[700px]">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>User</TableHead>
+                        <TableHead className="hidden sm:table-cell">Email</TableHead>
+                        <TableHead>Roles</TableHead>
+                        <TableHead className="hidden md:table-cell">Domain Access</TableHead>
+                        <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredUsers.map((u) => {
+                        const domains = [...new Set(u.roles.flatMap(r => ROLE_PERMISSIONS[r]?.domains || []))];
+                        
+                        return (
+                          <TableRow key={u.id}>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-8 w-8 shrink-0">
+                                  <AvatarImage src={u.avatar_url || undefined} />
+                                  <AvatarFallback>
+                                    {(u.full_name || u.email).charAt(0).toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div className="min-w-0">
+                                  <span className="font-medium block truncate">{u.full_name || 'No name'}</span>
+                                  <span className="text-xs text-muted-foreground sm:hidden truncate block">{u.email}</span>
+                                </div>
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell text-muted-foreground">
+                              <span className="truncate block max-w-[200px]">{u.email}</span>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-1">
+                                {u.roles.map((role) => (
+                                  <Badge
+                                    key={role}
+                                    className={`${ROLE_COLORS[role]} text-xs cursor-pointer group`}
+                                    onClick={() => {
+                                      if (u.id !== user?.id) {
+                                        handleRemoveRole(u.id, role);
+                                      }
+                                    }}
+                                  >
+                                    <span className="truncate max-w-[80px]">{ROLE_LABELS[role]}</span>
+                                    {u.id !== user?.id && (
+                                      <Trash2 className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 shrink-0" />
+                                    )}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden md:table-cell">
+                              <div className="flex flex-wrap gap-1">
+                                {domains.length > 0 ? domains.slice(0, 3).map((domain) => (
+                                  <Badge key={domain} variant="outline" className="text-xs capitalize">
+                                    {domain}
+                                  </Badge>
+                                )) : (
+                                  <span className="text-xs text-muted-foreground">View only</span>
+                                )}
+                                {domains.length > 3 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{domains.length - 3}
+                                  </Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell className="hidden lg:table-cell text-muted-foreground">
+                              {new Date(u.created_at).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              {u.id !== user?.id && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedUser(u);
+                                    setIsRoleDialogOpen(true);
+                                  }}
+                                >
+                                  <UserPlus className="h-4 w-4 sm:mr-1" />
+                                  <span className="hidden sm:inline">Add Role</span>
+                                </Button>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             )}
           </CardContent>
         </Card>
 
         {/* Role Assignment Dialog */}
         <Dialog open={isRoleDialogOpen} onOpenChange={setIsRoleDialogOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>Assign Role</DialogTitle>
               <DialogDescription>
@@ -423,12 +440,19 @@ const UserManagementPage = () => {
                 </div>
               )}
             </div>
-            <DialogFooter>
+            <DialogFooter className="gap-2 sm:gap-0">
               <Button variant="outline" onClick={() => setIsRoleDialogOpen(false)}>
                 Cancel
               </Button>
               <Button onClick={handleAssignRole} disabled={!selectedRole || isSubmitting}>
-                {isSubmitting ? 'Assigning...' : 'Assign Role'}
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Assigning...
+                  </>
+                ) : (
+                  'Assign Role'
+                )}
               </Button>
             </DialogFooter>
           </DialogContent>
