@@ -14,7 +14,6 @@ import {
   Layers,
   FileImage,
   Clock,
-  FolderOpen,
 } from "lucide-react";
 
 const diagramTypes = [
@@ -29,20 +28,20 @@ const DiagramsPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <GitBranch className="h-8 w-8 text-primary" />
-              <h1 className="text-3xl font-bold tracking-tight">Architecture Diagrams</h1>
+              <GitBranch className="h-6 sm:h-8 w-6 sm:w-8 text-primary" />
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Architecture Diagrams</h1>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm sm:text-base">
               Create and manage enterprise architecture diagrams and visual models
             </p>
           </div>
-          <div className="flex gap-3">
-            <div className="relative w-64">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search diagrams..."
@@ -51,7 +50,7 @@ const DiagramsPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto">
               <Plus className="h-4 w-4 mr-2" />
               New Diagram
             </Button>
@@ -59,7 +58,7 @@ const DiagramsPage = () => {
         </div>
 
         {/* Diagram Types */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {diagramTypes.map((type) => (
             <Card key={type.id} className="hover:border-accent/50 transition-colors cursor-pointer group">
               <CardHeader className="pb-3">
@@ -81,12 +80,12 @@ const DiagramsPage = () => {
         {/* Recent Diagrams - Empty State */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <CardTitle>Recent Diagrams</CardTitle>
                 <CardDescription>Your recently edited architecture diagrams</CardDescription>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto">
                 <Clock className="h-4 w-4 mr-2" />
                 View All
               </Button>
@@ -117,7 +116,7 @@ const DiagramsPage = () => {
             <CardDescription>Start with a pre-built template to save time</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
                 { name: "Application Landscape", category: "ArchiMate", icon: Layers },
                 { name: "Business Process Flow", category: "BPMN", icon: Workflow },

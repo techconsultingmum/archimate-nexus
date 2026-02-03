@@ -47,7 +47,8 @@ import {
   Pencil,
   Trash2,
   Eye,
-  Filter,
+  FileText,
+  Loader2,
 } from "lucide-react";
 
 interface ArtifactsTableProps {
@@ -66,6 +67,7 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
   const [deleteArtifact, setDeleteArtifact] = useState<ArchitectureArtifact | null>(null);
   const [viewArtifact, setViewArtifact] = useState<ArchitectureArtifact | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const hasDomainAccess = canAccessDomain(domain);
 
@@ -101,6 +103,7 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
     if (!deleteArtifact) return;
 
     try {
+      setIsDeleting(true);
       const { error } = await supabase
         .from('architecture_artifacts')
         .delete()
@@ -119,9 +122,11 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
       console.error('Error deleting artifact:', error);
       toast({
         title: "Error",
-        description: "Failed to delete artifact",
+        description: "Failed to delete artifact. You may not have permission.",
         variant: "destructive",
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -165,16 +170,24 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
           ) : filteredArtifacts.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No artifacts found</p>
-              {canCreate && hasDomainAccess && (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <FileText className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">
+                {searchTerm ? "No artifacts found" : "No artifacts yet"}
+              </h3>
+              <p className="text-muted-foreground text-sm max-w-md mb-4">
+                {searchTerm 
+                  ? "Try a different search term or clear your search."
+                  : `Start documenting your ${domain} architecture components.`}
+              </p>
+              {canCreate && hasDomainAccess && !searchTerm && (
                 <Button 
-                  variant="outline" 
-                  className="mt-4"
                   onClick={() => { setSelectedArtifact(null); setIsFormOpen(true); }}
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -253,6 +266,7 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
                           <DropdownMenuTrigger asChild>
                             <Button variant="ghost" size="icon">
                               <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Open menu</span>
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-popover border-border z-50">
@@ -331,9 +345,20 @@ export function ArtifactsTable({ domain }: ArtifactsTableProps) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground">
-              Delete
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete} 
+              className="bg-destructive text-destructive-foreground"
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                'Delete'
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CommandDialog,
@@ -31,18 +31,18 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
   const navigate = useNavigate();
   const { query, setQuery, results, isSearching, clearSearch } = useSearch();
 
-  const handleSelect = (href: string) => {
+  const handleSelect = useCallback((href: string) => {
     navigate(href);
     onOpenChange(false);
     clearSearch();
-  };
+  }, [navigate, onOpenChange, clearSearch]);
 
   // Reset search when dialog closes
   useEffect(() => {
     if (!open) {
       clearSearch();
     }
-  }, [open, clearSearch]);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
@@ -71,7 +71,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                   onSelect={() => handleSelect(result.href)}
                   className="flex items-center gap-3 cursor-pointer"
                 >
-                  <DomainIcon className="h-4 w-4 text-muted-foreground" />
+                  <DomainIcon className="h-4 w-4 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium truncate">{result.name}</p>
                     <p className="text-xs text-muted-foreground">
@@ -79,7 +79,7 @@ export function SearchDialog({ open, onOpenChange }: SearchDialogProps) {
                     </p>
                   </div>
                   {result.status && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs shrink-0">
                       {STATUS_LABELS[result.status as keyof typeof STATUS_LABELS] || result.status}
                     </Badge>
                   )}

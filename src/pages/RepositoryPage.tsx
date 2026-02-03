@@ -8,43 +8,50 @@ import { cn } from "@/lib/utils";
 const domainConfig: Record<ArchitectureDomain, {
   title: string;
   icon: typeof Building2;
-  color: string;
+  colorClass: string;
+  bgClass: string;
   description: string;
 }> = {
   business: {
     title: "Business Architecture",
     icon: Building2,
-    color: "domain-business",
+    colorClass: "text-domain-business",
+    bgClass: "bg-domain-business/10",
     description: "Manage business capabilities, processes, and organizational structures",
   },
   data: {
     title: "Data Architecture",
     icon: Database,
-    color: "domain-data",
+    colorClass: "text-domain-data",
+    bgClass: "bg-domain-data/10",
     description: "Define data entities, relationships, flows, and governance",
   },
   application: {
     title: "Application Architecture",
     icon: AppWindow,
-    color: "domain-application",
+    colorClass: "text-domain-application",
+    bgClass: "bg-domain-application/10",
     description: "Document applications, services, APIs, and integrations",
   },
   technology: {
     title: "Technology Architecture",
     icon: Server,
-    color: "domain-technology",
+    colorClass: "text-domain-technology",
+    bgClass: "bg-domain-technology/10",
     description: "Manage infrastructure, platforms, and technology standards",
   },
   ai: {
     title: "AI Architecture",
     icon: Brain,
-    color: "domain-ai",
+    colorClass: "text-domain-ai",
+    bgClass: "bg-domain-ai/10",
     description: "AI/ML models, pipelines, datasets, and intelligent automation",
   },
   cloud: {
     title: "Cloud Architecture",
     icon: Cloud,
-    color: "domain-cloud",
+    colorClass: "text-domain-cloud",
+    bgClass: "bg-domain-cloud/10",
     description: "Cloud infrastructure, services, and deployment patterns",
   },
 };
@@ -57,15 +64,15 @@ const RepositoryPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center gap-4">
-          <div className={cn("p-3 rounded-xl", `bg-${config.color}/10`)}>
-            <Icon className={cn("h-8 w-8", `text-${config.color}`)} />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className={cn("p-3 rounded-xl shrink-0", config.bgClass)}>
+            <Icon className={cn("h-6 sm:h-8 w-6 sm:w-8", config.colorClass)} />
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{config.title}</h1>
-            <p className="text-muted-foreground mt-1">{config.description}</p>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{config.title}</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">{config.description}</p>
           </div>
         </div>
 

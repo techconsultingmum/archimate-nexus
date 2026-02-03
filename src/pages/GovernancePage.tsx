@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -112,19 +111,19 @@ const GovernancePage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <Shield className="h-8 w-8 text-primary" />
-              <h1 className="text-3xl font-bold tracking-tight">Architecture Governance</h1>
+              <Shield className="h-6 sm:h-8 w-6 sm:w-8 text-primary" />
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Architecture Governance</h1>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm sm:text-base">
               Monitor compliance, manage reviews, and enforce architecture standards
             </p>
           </div>
-          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto">
             <FileCheck className="h-4 w-4 mr-2" />
             New Review Request
           </Button>
@@ -171,7 +170,7 @@ const GovernancePage = () => {
                       </span>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-4">
+                  <p className="text-sm text-muted-foreground mt-4 text-center">
                     {complianceScore >= 70
                       ? "Excellent compliance"
                       : complianceScore >= 40
@@ -198,11 +197,11 @@ const GovernancePage = () => {
                 <div className="space-y-4">
                   {metrics.map((metric) => (
                     <div key={metric.name} className="flex items-center gap-4">
-                      {getStatusIcon(metric.status)}
-                      <div className="flex-1">
+                      <div className="shrink-0">{getStatusIcon(metric.status)}</div>
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-medium text-sm">{metric.name}</span>
-                          <span className="text-sm text-muted-foreground">
+                          <span className="font-medium text-sm truncate">{metric.name}</span>
+                          <span className="text-sm text-muted-foreground shrink-0 ml-2">
                             {metric.value} / {metric.total}
                           </span>
                         </div>
@@ -221,11 +220,11 @@ const GovernancePage = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="reviews" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="reviews">Pending Reviews</TabsTrigger>
-            <TabsTrigger value="policies">Policies</TabsTrigger>
-            <TabsTrigger value="standards">Standards</TabsTrigger>
-            <TabsTrigger value="audit">Audit Log</TabsTrigger>
+          <TabsList className="w-full sm:w-auto overflow-x-auto">
+            <TabsTrigger value="reviews" className="text-xs sm:text-sm">Pending Reviews</TabsTrigger>
+            <TabsTrigger value="policies" className="text-xs sm:text-sm">Policies</TabsTrigger>
+            <TabsTrigger value="standards" className="text-xs sm:text-sm">Standards</TabsTrigger>
+            <TabsTrigger value="audit" className="text-xs sm:text-sm">Audit Log</TabsTrigger>
           </TabsList>
 
           <TabsContent value="reviews">
@@ -245,25 +244,23 @@ const GovernancePage = () => {
                     {pendingReviews.map((review) => (
                       <div
                         key={review.id}
-                        className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-muted/50 cursor-pointer transition-colors"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-border hover:bg-muted/50 cursor-pointer transition-colors"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center shrink-0">
                             <Clock className="h-5 w-5 text-yellow-600" />
                           </div>
-                          <div>
-                            <p className="font-medium">{review.name}</p>
+                          <div className="min-w-0">
+                            <p className="font-medium truncate">{review.name}</p>
                             <p className="text-sm text-muted-foreground">
                               {review.domain} · Waiting {review.daysWaiting} days
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                          <Button variant="outline" size="sm">
-                            Review
-                            <ArrowRight className="h-4 w-4 ml-2" />
-                          </Button>
-                        </div>
+                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
+                          Review
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Button>
                       </div>
                     ))}
                   </div>
