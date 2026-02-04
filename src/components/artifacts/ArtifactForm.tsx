@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +21,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Loader2 } from "lucide-react";
 import {
   ArchitectureArtifact,
   ArchitectureDomain,
@@ -30,6 +31,7 @@ import {
   STATUS_LABELS,
   DOMAIN_ARTIFACT_TYPES,
 } from "@/types/artifacts";
+import { artifactFormSchema, parseFormData } from "@/lib/validation";
 
 interface ArtifactFormProps {
   isOpen: boolean;
@@ -39,10 +41,18 @@ interface ArtifactFormProps {
   artifact?: ArchitectureArtifact | null;
 }
 
+interface FormErrors {
+  name?: string;
+  description?: string;
+  version?: string;
+  tags?: string;
+}
+
 export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: ArtifactFormProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
   
   const [formData, setFormData] = useState({
     name: '',
@@ -54,33 +64,51 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
   });
 
   // Reset form when artifact changes or dialog opens/closes
+  const resetForm = useCallback(() => {
+    setFormData({
+      name: artifact?.name || '',
+      description: artifact?.description || '',
+      artifact_type: artifact?.artifact_type || DOMAIN_ARTIFACT_TYPES[domain][0],
+      status: artifact?.status || 'draft' as ArtifactStatus,
+      version: artifact?.version || '1.0',
+      tags: artifact?.tags?.join(', ') || '',
+    });
+    setErrors({});
+  }, [artifact, domain]);
+
   React.useEffect(() => {
     if (isOpen) {
-      setFormData({
-        name: artifact?.name || '',
-        description: artifact?.description || '',
-        artifact_type: artifact?.artifact_type || DOMAIN_ARTIFACT_TYPES[domain][0],
-        status: artifact?.status || 'draft' as ArtifactStatus,
-        version: artifact?.version || '1.0',
-        tags: artifact?.tags?.join(', ') || '',
-      });
+      resetForm();
     }
-  }, [isOpen, artifact, domain]);
+  }, [isOpen, resetForm]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.name.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Name is required",
-        variant: "destructive",
-      });
+    setErrors({});
+
+    // Validate form data
+    const validationResult = parseFormData(artifactFormSchema, {
+      name: formData.name,
+      description: formData.description || null,
+      artifact_type: formData.artifact_type,
+      status: formData.status,
+      version: formData.version,
+      tags: formData.tags,
+    });
+
+    if (!validationResult.success && 'errors' in validationResult) {
+      setErrors(validationResult.errors as FormErrors);
       return;
     }
 
     try {
       setIsSubmitting(true);
+
+      const tagsArray = formData.tags
+        .split(',')
+        .map(t => t.trim())
+        .filter(Boolean)
+        .slice(0, 20); // Max 20 tags
 
       const payload = {
         name: formData.name.trim(),
@@ -88,8 +116,8 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
         domain,
         artifact_type: formData.artifact_type,
         status: formData.status,
-        version: formData.version,
-        tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean),
+        version: formData.version.trim() || '1.0',
+        tags: tagsArray,
         updated_by: user?.id,
       };
 
@@ -160,7 +188,12 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="Enter artifact name"
                 maxLength={100}
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "name-error" : undefined}
               />
+              {errors.name && (
+                <p id="name-error" className="text-sm text-destructive">{errors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -172,17 +205,25 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
                 placeholder="Enter artifact description"
                 rows={3}
                 maxLength={1000}
+                aria-invalid={!!errors.description}
+                aria-describedby={errors.description ? "description-error" : undefined}
               />
+              {errors.description && (
+                <p id="description-error" className="text-sm text-destructive">{errors.description}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                {formData.description.length}/1000 characters
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Type</Label>
+                <Label htmlFor="type">Type</Label>
                 <Select 
                   value={formData.artifact_type} 
                   onValueChange={(value) => setFormData(prev => ({ ...prev, artifact_type: value as ArtifactType }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="type">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -196,12 +237,12 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
               </div>
 
               <div className="space-y-2">
-                <Label>Status</Label>
+                <Label htmlFor="status">Status</Label>
                 <Select 
                   value={formData.status} 
                   onValueChange={(value) => setFormData(prev => ({ ...prev, status: value as ArtifactStatus }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="status">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -223,27 +264,41 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
                 onChange={(e) => setFormData(prev => ({ ...prev, version: e.target.value }))}
                 placeholder="1.0"
                 maxLength={20}
+                aria-invalid={!!errors.version}
+                aria-describedby={errors.version ? "version-error" : undefined}
               />
+              {errors.version && (
+                <p id="version-error" className="text-sm text-destructive">{errors.version}</p>
+              )}
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
+              <Label htmlFor="tags">Tags (comma-separated, max 20)</Label>
               <Input
                 id="tags"
                 value={formData.tags}
                 onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
                 placeholder="e.g., critical, core, legacy"
-                maxLength={200}
+                maxLength={500}
+                aria-describedby="tags-hint"
               />
+              <p id="tags-hint" className="text-xs text-muted-foreground">
+                Each tag max 50 characters
+              </p>
             </div>
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : artifact ? 'Update' : 'Create'}
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : artifact ? 'Update' : 'Create'}
             </Button>
           </DialogFooter>
         </form>
