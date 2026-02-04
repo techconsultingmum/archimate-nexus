@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,24 +8,34 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { passwordChangeSchema, parseFormData } from "@/lib/validation";
 import {
   Settings,
   User,
   Bell,
   Shield,
   Palette,
-  Globe,
   Save,
   Loader2,
+  AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
+
+interface PasswordErrors {
+  currentPassword?: string;
+  newPassword?: string;
+  confirmPassword?: string;
+}
 
 const SettingsPage = () => {
   const { profile, primaryRole } = useAuth();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
   const [profileData, setProfileData] = useState({
     fullName: "",
     email: "",
@@ -41,7 +51,8 @@ const SettingsPage = () => {
     newPassword: "",
     confirmPassword: "",
   });
-  const [passwordErrors, setPasswordErrors] = useState<string | null>(null);
+  const [passwordErrors, setPasswordErrors] = useState<PasswordErrors>({});
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   // Sync profile data when it changes
   useEffect(() => {
@@ -54,11 +65,20 @@ const SettingsPage = () => {
   }, [profile]);
 
   const handleSaveProfile = async () => {
+    if (!profileData.fullName.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "Name cannot be empty",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSaving(true);
     try {
       const { error } = await supabase
         .from("profiles")
-        .update({ full_name: profileData.fullName })
+        .update({ full_name: profileData.fullName.trim() })
         .eq("id", profile?.id);
 
       if (error) throw error;
@@ -78,6 +98,42 @@ const SettingsPage = () => {
       setSaving(false);
     }
   };
+
+  const handleChangePassword = useCallback(async () => {
+    setPasswordErrors({});
+    setPasswordSuccess(false);
+
+    const validationResult = parseFormData(passwordChangeSchema, passwordData);
+
+    if (!validationResult.success && 'errors' in validationResult) {
+      setPasswordErrors(validationResult.errors as PasswordErrors);
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: passwordData.newPassword,
+      });
+
+      if (error) throw error;
+
+      setPasswordSuccess(true);
+      setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
+      
+      toast({
+        title: "Password updated",
+        description: "Your password has been changed successfully.",
+      });
+    } catch (error) {
+      console.error("Error updating password:", error);
+      setPasswordErrors({ 
+        currentPassword: "Failed to update password. Please check your current password and try again." 
+      });
+    } finally {
+      setChangingPassword(false);
+    }
+  }, [passwordData, toast]);
 
   return (
     <AppLayout>
@@ -330,90 +386,79 @@ const SettingsPage = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <Label>Change Password</Label>
-                  {passwordErrors && (
-                    <p className="text-sm text-destructive">{passwordErrors}</p>
+                  
+                  {passwordSuccess && (
+                    <Alert className="border-green-500/50 bg-green-500/10">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      <AlertDescription className="text-green-600">
+                        Password updated successfully!
+                      </AlertDescription>
+                    </Alert>
                   )}
+                  
+                  {(passwordErrors.currentPassword || passwordErrors.newPassword || passwordErrors.confirmPassword) && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        {passwordErrors.currentPassword || passwordErrors.newPassword || passwordErrors.confirmPassword}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  
                   <div className="grid gap-3">
-                    <Input
-                      type="password"
-                      placeholder="Current password"
-                      value={passwordData.currentPassword}
-                      onChange={(e) =>
-                        setPasswordData((prev) => ({ ...prev, currentPassword: e.target.value }))
-                      }
-                    />
-                    <Input
-                      type="password"
-                      placeholder="New password (min 8 chars, uppercase, lowercase, number)"
-                      value={passwordData.newPassword}
-                      onChange={(e) =>
-                        setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))
-                      }
-                    />
-                    <Input
-                      type="password"
-                      placeholder="Confirm new password"
-                      value={passwordData.confirmPassword}
-                      onChange={(e) =>
-                        setPasswordData((prev) => ({ ...prev, confirmPassword: e.target.value }))
-                      }
-                    />
+                    <div className="space-y-1">
+                      <Input
+                        type="password"
+                        placeholder="Current password"
+                        value={passwordData.currentPassword}
+                        onChange={(e) =>
+                          setPasswordData((prev) => ({ ...prev, currentPassword: e.target.value }))
+                        }
+                        aria-invalid={!!passwordErrors.currentPassword}
+                        disabled={changingPassword}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Input
+                        type="password"
+                        placeholder="New password"
+                        value={passwordData.newPassword}
+                        onChange={(e) =>
+                          setPasswordData((prev) => ({ ...prev, newPassword: e.target.value }))
+                        }
+                        aria-invalid={!!passwordErrors.newPassword}
+                        disabled={changingPassword}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Min 8 characters with uppercase, lowercase, and number
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <Input
+                        type="password"
+                        placeholder="Confirm new password"
+                        value={passwordData.confirmPassword}
+                        onChange={(e) =>
+                          setPasswordData((prev) => ({ ...prev, confirmPassword: e.target.value }))
+                        }
+                        aria-invalid={!!passwordErrors.confirmPassword}
+                        disabled={changingPassword}
+                      />
+                    </div>
                   </div>
                   <Button
                     variant="outline"
-                    onClick={async () => {
-                      setPasswordErrors(null);
-                      
-                      if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
-                        setPasswordErrors("All fields are required");
-                        return;
-                      }
-                      
-                      if (passwordData.newPassword.length < 8) {
-                        setPasswordErrors("New password must be at least 8 characters");
-                        return;
-                      }
-                      
-                      if (!/[A-Z]/.test(passwordData.newPassword)) {
-                        setPasswordErrors("New password must contain at least one uppercase letter");
-                        return;
-                      }
-                      
-                      if (!/[a-z]/.test(passwordData.newPassword)) {
-                        setPasswordErrors("New password must contain at least one lowercase letter");
-                        return;
-                      }
-                      
-                      if (!/[0-9]/.test(passwordData.newPassword)) {
-                        setPasswordErrors("New password must contain at least one number");
-                        return;
-                      }
-                      
-                      if (passwordData.newPassword !== passwordData.confirmPassword) {
-                        setPasswordErrors("Passwords do not match");
-                        return;
-                      }
-
-                      try {
-                        const { error } = await supabase.auth.updateUser({
-                          password: passwordData.newPassword,
-                        });
-
-                        if (error) throw error;
-
-                        toast({
-                          title: "Password updated",
-                          description: "Your password has been changed successfully.",
-                        });
-                        
-                        setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
-                      } catch (error) {
-                        console.error("Error updating password:", error);
-                        setPasswordErrors("Failed to update password. Please try again.");
-                      }
-                    }}
+                    onClick={handleChangePassword}
+                    disabled={changingPassword || !passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
                   >
-                    Update Password
+                    {changingPassword ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      'Update Password'
+                    )}
                   </Button>
                 </div>
 
@@ -436,9 +481,12 @@ const SettingsPage = () => {
                   <p className="text-sm text-muted-foreground">
                     Permanently delete your account and all associated data
                   </p>
-                  <Button variant="destructive" size="sm">
+                  <Button variant="destructive" size="sm" disabled>
                     Delete Account
                   </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Contact an Enterprise Architect to delete your account
+                  </p>
                 </div>
               </CardContent>
             </Card>
