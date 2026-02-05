@@ -85,9 +85,9 @@ export function ZachmanMatrix({ onCellClick }: ZachmanMatrixProps) {
   const getCellColor = (status: "complete" | "partial" | "empty") => {
     switch (status) {
       case "complete":
-        return "bg-green-50 border-green-200 hover:border-green-400";
+        return "bg-accent/10 border-accent/30 hover:border-accent";
       case "partial":
-        return "bg-amber-50 border-amber-200 hover:border-amber-400";
+        return "bg-domain-business/10 border-domain-business/30 hover:border-domain-business";
       case "empty":
         return "bg-secondary/50 border-border hover:border-muted-foreground";
     }
@@ -174,11 +174,11 @@ export function ZachmanMatrix({ onCellClick }: ZachmanMatrixProps) {
       <div className="flex items-center gap-6 mt-6 text-sm">
         <span className="text-muted-foreground">Cell Status:</span>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-green-100 border border-green-300" />
+          <div className="w-4 h-4 rounded bg-accent/20 border border-accent/50" />
           <span>Complete</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded bg-amber-100 border border-amber-300" />
+          <div className="w-4 h-4 rounded bg-domain-business/20 border border-domain-business/50" />
           <span>In Progress</span>
         </div>
         <div className="flex items-center gap-2">

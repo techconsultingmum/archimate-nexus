@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -58,10 +58,21 @@ const roleItems = [
 ];
 
 export function AppSidebar() {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem('sidebar-collapsed') === 'true';
+    }
+    return false;
+  });
   const location = useLocation();
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Persist collapsed state
+  const handleCollapse = (value: boolean) => {
+    setCollapsed(value);
+    localStorage.setItem('sidebar-collapsed', String(value));
+  };
 
   const NavItem = ({ item }: { item: typeof frameworkItems[0] }) => {
     const content = (
@@ -189,7 +200,7 @@ export function AppSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() => handleCollapse(!collapsed)}
           className="w-full justify-center text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
         >
           {collapsed ? (

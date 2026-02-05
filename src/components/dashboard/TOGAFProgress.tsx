@@ -86,7 +86,7 @@ export function TOGAFProgress() {
                 </span>
                 <span className={cn(
                   "text-xs",
-                  phase.status === "completed" ? "text-green-500" :
+                  phase.status === "completed" ? "text-accent" :
                   phase.status === "in-progress" ? "text-accent" : "text-muted-foreground"
                 )}>
                   {phase.progress}%

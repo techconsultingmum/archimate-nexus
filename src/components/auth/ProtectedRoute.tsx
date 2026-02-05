@@ -26,7 +26,6 @@ export function ProtectedRoute({ children, requiredRole, requiredDomain }: Prote
   }
 
   if (!user) {
-    // Use element form instead of component form to avoid ref warning
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
