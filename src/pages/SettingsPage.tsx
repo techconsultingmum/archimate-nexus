@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/components/theme-provider";
 import { supabase } from "@/integrations/supabase/client";
 import { passwordChangeSchema, parseFormData } from "@/lib/validation";
 import {
@@ -23,6 +24,10 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle2,
+  Sun,
+  Moon,
+  Monitor,
+  Check,
 } from "lucide-react";
 
 interface PasswordErrors {
@@ -34,8 +39,12 @@ interface PasswordErrors {
 const SettingsPage = () => {
   const { profile, primaryRole } = useAuth();
   const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
   const [saving, setSaving] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
+  const [collapsedSidebar, setCollapsedSidebar] = useState(() => {
+    return localStorage.getItem('sidebar-collapsed') === 'true';
+  });
   const [profileData, setProfileData] = useState({
     fullName: "",
     email: "",
@@ -53,6 +62,11 @@ const SettingsPage = () => {
   });
   const [passwordErrors, setPasswordErrors] = useState<PasswordErrors>({});
   const [passwordSuccess, setPasswordSuccess] = useState(false);
+
+  const handleSidebarToggle = (checked: boolean) => {
+    setCollapsedSidebar(checked);
+    localStorage.setItem('sidebar-collapsed', String(checked));
+  };
 
   // Sync profile data when it changes
   useEffect(() => {
@@ -344,19 +358,61 @@ const SettingsPage = () => {
                 <div className="space-y-4">
                   <Label>Theme</Label>
                   <div className="grid grid-cols-3 gap-4">
-                    <div className="border-2 border-primary rounded-lg p-4 cursor-pointer bg-background">
-                      <div className="w-full h-20 rounded bg-gradient-to-br from-background to-secondary mb-2" />
+                    <button
+                      type="button"
+                      onClick={() => setTheme("light")}
+                      className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        theme === "light" ? "border-primary bg-accent/10" : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {theme === "light" && (
+                        <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="h-3 w-3 text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="w-full h-16 rounded bg-gradient-to-br from-white to-slate-100 border mb-2 flex items-center justify-center">
+                        <Sun className="h-6 w-6 text-amber-500" />
+                      </div>
                       <p className="text-sm font-medium text-center">Light</p>
-                    </div>
-                    <div className="border rounded-lg p-4 cursor-pointer hover:border-primary/50 transition-colors">
-                      <div className="w-full h-20 rounded bg-gradient-to-br from-slate-900 to-slate-800 mb-2" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTheme("dark")}
+                      className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        theme === "dark" ? "border-primary bg-accent/10" : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {theme === "dark" && (
+                        <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="h-3 w-3 text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="w-full h-16 rounded bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 mb-2 flex items-center justify-center">
+                        <Moon className="h-6 w-6 text-blue-400" />
+                      </div>
                       <p className="text-sm font-medium text-center">Dark</p>
-                    </div>
-                    <div className="border rounded-lg p-4 cursor-pointer hover:border-primary/50 transition-colors">
-                      <div className="w-full h-20 rounded bg-gradient-to-r from-background to-slate-900 mb-2" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setTheme("system")}
+                      className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                        theme === "system" ? "border-primary bg-accent/10" : "border-border hover:border-primary/50"
+                      }`}
+                    >
+                      {theme === "system" && (
+                        <div className="absolute top-2 right-2 h-5 w-5 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="h-3 w-3 text-primary-foreground" />
+                        </div>
+                      )}
+                      <div className="w-full h-16 rounded bg-gradient-to-r from-white to-slate-900 border mb-2 flex items-center justify-center">
+                        <Monitor className="h-6 w-6 text-muted-foreground" />
+                      </div>
                       <p className="text-sm font-medium text-center">System</p>
-                    </div>
+                    </button>
                   </div>
+                  <p className="text-xs text-muted-foreground">
+                    Select your preferred theme. System will follow your device settings.
+                  </p>
                 </div>
 
                 <Separator />
@@ -367,7 +423,10 @@ const SettingsPage = () => {
                     <p className="text-sm text-muted-foreground">
                       Default to collapsed sidebar on startup
                     </p>
-                    <Switch />
+                    <Switch
+                      checked={collapsedSidebar}
+                      onCheckedChange={handleSidebarToggle}
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -388,9 +447,9 @@ const SettingsPage = () => {
                   <Label>Change Password</Label>
                   
                   {passwordSuccess && (
-                    <Alert className="border-green-500/50 bg-green-500/10">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      <AlertDescription className="text-green-600">
+                    <Alert className="border-accent/50 bg-accent/10">
+                      <CheckCircle2 className="h-4 w-4 text-accent" />
+                      <AlertDescription className="text-accent">
                         Password updated successfully!
                       </AlertDescription>
                     </Alert>

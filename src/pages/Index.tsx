@@ -182,13 +182,13 @@ const Index = () => {
           <StatCard
             title="Approved"
             value={loading ? "..." : stats.approvedCount.toLocaleString()}
-            icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+            icon={<CheckCircle className="h-5 w-5 text-accent" />}
             trend={{ value: stats.approvedCount, label: "artifacts" }}
           />
           <StatCard
             title="Compliance"
             value={loading ? "..." : `${complianceRate}%`}
-            icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+            icon={<CheckCircle className="h-5 w-5 text-accent" />}
             trend={{ value: complianceRate, label: "approved rate" }}
           />
         </div>

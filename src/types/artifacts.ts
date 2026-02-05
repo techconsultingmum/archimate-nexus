@@ -79,10 +79,10 @@ export const STATUS_LABELS: Record<ArtifactStatus, string> = {
 
 export const STATUS_COLORS: Record<ArtifactStatus, string> = {
   draft: 'bg-muted text-muted-foreground',
-  under_review: 'bg-yellow-500/20 text-yellow-700 border-yellow-500',
-  approved: 'bg-green-500/20 text-green-700 border-green-500',
-  deprecated: 'bg-orange-500/20 text-orange-700 border-orange-500',
-  retired: 'bg-red-500/20 text-red-700 border-red-500',
+  under_review: 'bg-domain-business/20 text-domain-business border-domain-business',
+  approved: 'bg-accent/20 text-accent border-accent',
+  deprecated: 'bg-domain-business/20 text-domain-business border-domain-business',
+  retired: 'bg-destructive/20 text-destructive border-destructive',
 };
 
 export const DOMAIN_ARTIFACT_TYPES: Record<ArchitectureDomain, ArtifactType[]> = {

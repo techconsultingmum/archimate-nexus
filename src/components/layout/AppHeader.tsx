@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, Search, HelpCircle, LogOut, Settings, User as UserIcon, Menu } from "lucide-react";
+import { Bell, Search, HelpCircle, LogOut, Settings, User as UserIcon, Menu, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,6 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { ROLE_LABELS } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "@/components/theme-provider";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Sheet,
   SheetContent,
@@ -27,6 +29,7 @@ import { SearchDialog } from "./SearchDialog";
 export function AppHeader() {
   const { profile, primaryRole, signOut } = useAuth();
   const navigate = useNavigate();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -41,6 +44,10 @@ export function AppHeader() {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -98,6 +105,28 @@ export function AppHeader() {
         >
           <Search className="h-5 w-5" />
         </Button>
+
+          {/* Theme toggle */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={toggleTheme}
+              >
+                {resolvedTheme === "dark" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Switch to {resolvedTheme === "dark" ? "light" : "dark"} mode</p>
+            </TooltipContent>
+          </Tooltip>
 
         <Button variant="ghost" size="icon" className="hidden sm:flex text-muted-foreground hover:text-foreground">
           <HelpCircle className="h-5 w-5" />

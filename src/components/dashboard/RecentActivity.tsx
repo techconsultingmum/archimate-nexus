@@ -24,7 +24,7 @@ const statusIcons = {
 const statusColors = {
   updated: "text-domain-application",
   linked: "text-domain-data",
-  approved: "text-green-500",
+  approved: "text-accent",
   created: "text-muted-foreground",
   warning: "text-domain-business",
 };
