@@ -56,15 +56,15 @@ const RequirementsPage = () => {
   }, []);
 
   const priorityColors = {
-    high: "bg-red-500/20 text-red-700 border-red-500",
-    medium: "bg-yellow-500/20 text-yellow-700 border-yellow-500",
-    low: "bg-green-500/20 text-green-700 border-green-500",
+    high: "bg-destructive/20 text-destructive border-destructive",
+    medium: "bg-domain-business/20 text-domain-business border-domain-business",
+    low: "bg-accent/20 text-accent border-accent",
   };
 
   const statusColors = {
-    open: "bg-blue-500/20 text-blue-700",
-    in_progress: "bg-yellow-500/20 text-yellow-700",
-    completed: "bg-green-500/20 text-green-700",
+    open: "bg-domain-cloud/20 text-domain-cloud",
+    in_progress: "bg-domain-business/20 text-domain-business",
+    completed: "bg-accent/20 text-accent",
   };
 
   const completionRate = stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0;
@@ -115,7 +115,7 @@ const RequirementsPage = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-blue-500" />
+                <AlertCircle className="h-4 w-4 text-domain-cloud" />
                 Open
               </CardTitle>
             </CardHeader>
@@ -126,7 +126,7 @@ const RequirementsPage = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Clock className="h-4 w-4 text-yellow-500" />
+                <Clock className="h-4 w-4 text-domain-business" />
                 <span className="truncate">In Progress</span>
               </CardTitle>
             </CardHeader>
@@ -137,7 +137,7 @@ const RequirementsPage = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 text-accent" />
                 Completed
               </CardTitle>
             </CardHeader>
