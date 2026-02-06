@@ -11,7 +11,7 @@ const referenceModels = [
     abbr: "PRM",
     description: "Framework for measuring performance and results of IT investments",
     icon: Briefcase,
-    color: "bg-blue-600",
+    color: "bg-domain-cloud",
     components: ["Mission & Business Results", "Customer Results", "Processes & Activities", "Technology"],
   },
   {
@@ -20,7 +20,7 @@ const referenceModels = [
     abbr: "BRM",
     description: "Function-driven framework for federal government operations",
     icon: Landmark,
-    color: "bg-emerald-600",
+    color: "bg-accent",
     components: ["Services for Citizens", "Mode of Delivery", "Support Delivery", "Government Operations"],
   },
   {
@@ -29,7 +29,7 @@ const referenceModels = [
     abbr: "DRM",
     description: "Describes data and information to support program and business operations",
     icon: Database,
-    color: "bg-purple-600",
+    color: "bg-domain-data",
     components: ["Data Description", "Data Context", "Data Sharing"],
   },
   {
@@ -38,7 +38,7 @@ const referenceModels = [
     abbr: "ARM",
     description: "Categorizes applications and software components",
     icon: AppWindow,
-    color: "bg-amber-600",
+    color: "bg-domain-business",
     components: ["Customer Services", "Process Automation", "Business Management", "Back Office"],
   },
   {
@@ -47,7 +47,7 @@ const referenceModels = [
     abbr: "IRM",
     description: "Describes the technical infrastructure supporting IT services",
     icon: Server,
-    color: "bg-rose-600",
+    color: "bg-phase-e",
     components: ["Hosting", "Platform", "Network", "Security"],
   },
   {
@@ -56,7 +56,7 @@ const referenceModels = [
     abbr: "SRM",
     description: "Framework for security controls and risk management",
     icon: Shield,
-    color: "bg-slate-600",
+    color: "bg-domain-technology",
     components: ["Governance", "Access Control", "Awareness", "Audit & Accountability"],
   },
 ];

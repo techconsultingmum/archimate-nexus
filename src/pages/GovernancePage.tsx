@@ -87,20 +87,20 @@ const GovernancePage = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "good":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-accent" />;
       case "warning":
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="h-5 w-5 text-domain-business" />;
       case "critical":
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-destructive" />;
       default:
         return <Clock className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-500";
-    if (score >= 40) return "text-yellow-500";
-    return "text-red-500";
+    if (score >= 70) return "text-accent";
+    if (score >= 40) return "text-domain-business";
+    return "text-destructive";
   };
 
   const pendingReviews = [
@@ -236,7 +236,7 @@ const GovernancePage = () => {
               <CardContent>
                 {pendingReviews.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
+                    <CheckCircle className="h-12 w-12 mx-auto mb-4 text-accent" />
                     <p>All reviews are up to date!</p>
                   </div>
                 ) : (
@@ -247,8 +247,8 @@ const GovernancePage = () => {
                         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-border hover:bg-muted/50 cursor-pointer transition-colors"
                       >
                         <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center shrink-0">
-                            <Clock className="h-5 w-5 text-yellow-600" />
+                          <div className="w-10 h-10 rounded-lg bg-domain-business/20 flex items-center justify-center shrink-0">
+                            <Clock className="h-5 w-5 text-domain-business" />
                           </div>
                           <div className="min-w-0">
                             <p className="font-medium truncate">{review.name}</p>

@@ -197,8 +197,8 @@ export function TOGAFWheel({ selectedPhase, onSelectPhase }: TOGAFWheelProps) {
                 <h3 className="text-xl font-bold">{selectedPhaseData.name}</h3>
                 <span className={cn(
                   "text-xs font-medium px-2 py-0.5 rounded-full",
-                  selectedPhaseData.status === "completed" ? "bg-green-100 text-green-700" :
-                  selectedPhaseData.status === "in-progress" ? "bg-accent/20 text-accent" :
+                  selectedPhaseData.status === "completed" ? "bg-accent/20 text-accent" :
+                  selectedPhaseData.status === "in-progress" ? "bg-domain-business/20 text-domain-business" :
                   "bg-muted text-muted-foreground"
                 )}>
                   {selectedPhaseData.status.replace("-", " ")}

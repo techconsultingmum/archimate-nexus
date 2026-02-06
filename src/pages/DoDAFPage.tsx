@@ -12,7 +12,7 @@ const viewpoints = [
     description: "Overarching aspects of architecture across all views",
     icon: Eye,
     models: ["AV-1: Overview and Summary", "AV-2: Integrated Dictionary"],
-    color: "bg-blue-500"
+    color: "bg-domain-cloud"
   },
   {
     id: "cv",
@@ -21,7 +21,7 @@ const viewpoints = [
     description: "Capability-based planning and organizational relationships",
     icon: Target,
     models: ["CV-1: Vision", "CV-2: Capability Taxonomy", "CV-3: Capability Phasing", "CV-4: Capability Dependencies"],
-    color: "bg-purple-500"
+    color: "bg-domain-ai"
   },
   {
     id: "diy",
@@ -30,7 +30,7 @@ const viewpoints = [
     description: "Data assets, information exchanges, and data models",
     icon: Layers,
     models: ["DIV-1: Conceptual Data Model", "DIV-2: Logical Data Model", "DIV-3: Physical Data Model"],
-    color: "bg-green-500"
+    color: "bg-accent"
   },
   {
     id: "ov",
@@ -39,7 +39,7 @@ const viewpoints = [
     description: "Operational activities, nodes, and information exchanges",
     icon: Users,
     models: ["OV-1: High-Level Concept", "OV-2: Operational Resource Flow", "OV-3: Operational Resource Flow Matrix", "OV-4: Organizational Relationships", "OV-5a/b: Activity Models", "OV-6a/b/c: Rules & State Models"],
-    color: "bg-amber-500"
+    color: "bg-domain-business"
   },
   {
     id: "pv",
@@ -48,7 +48,7 @@ const viewpoints = [
     description: "Project portfolio and capability delivery",
     icon: GitBranch,
     models: ["PV-1: Project Portfolio", "PV-2: Project Timelines", "PV-3: Project to Capability Mapping"],
-    color: "bg-rose-500"
+    color: "bg-phase-e"
   },
   {
     id: "sv",
@@ -57,7 +57,7 @@ const viewpoints = [
     description: "Service taxonomy, interfaces, and evolution",
     icon: Network,
     models: ["SvcV-1: Services Context", "SvcV-2: Services Resource Flow", "SvcV-3a/b: Systems-Services Matrix", "SvcV-4: Services Functionality"],
-    color: "bg-cyan-500"
+    color: "bg-domain-application"
   },
   {
     id: "stv",
@@ -66,7 +66,7 @@ const viewpoints = [
     description: "Technical standards and conventions",
     icon: Shield,
     models: ["StdV-1: Standards Profile", "StdV-2: Standards Forecast"],
-    color: "bg-indigo-500"
+    color: "bg-domain-data"
   },
   {
     id: "syv",
@@ -75,7 +75,7 @@ const viewpoints = [
     description: "System design, functions, and physical resources",
     icon: Cpu,
     models: ["SV-1: Systems Interface", "SV-2: Systems Resource Flow", "SV-3: Systems-Systems Matrix", "SV-4: Systems Functionality", "SV-5a/b: Operational-Systems Traceability", "SV-6: Systems Resource Flow Matrix"],
-    color: "bg-orange-500"
+    color: "bg-phase-b"
   },
 ];
 
