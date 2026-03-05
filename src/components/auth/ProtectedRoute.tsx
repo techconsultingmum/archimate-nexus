@@ -28,13 +28,15 @@ export const ProtectedRoute = forwardRef<HTMLDivElement, ProtectedRouteProps>(
       }
 
       let cancelled = false;
-      supabase.rpc('has_role', { _user_id: user.id, _role: requiredRole })
-        .then(({ data }) => {
+      const verify = async () => {
+        try {
+          const { data } = await supabase.rpc('has_role', { _user_id: user.id, _role: requiredRole });
           if (!cancelled) setServerVerified(data === true);
-        })
-        .catch(() => {
+        } catch {
           if (!cancelled) setServerVerified(false);
-        });
+        }
+      };
+      verify();
 
       return () => { cancelled = true; };
     }, [requiredRole, user?.id]);
