@@ -1,6 +1,7 @@
-import { ReactNode, forwardRef } from 'react';
+import { ReactNode, forwardRef, useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { AppRole } from '@/types/auth';
 
@@ -15,8 +16,30 @@ export const ProtectedRoute = forwardRef<HTMLDivElement, ProtectedRouteProps>(
   function ProtectedRoute({ children, requiredRole, requiredDomain }, ref) {
     const { user, isLoading, hasRole, canAccessDomain } = useAuth();
     const location = useLocation();
+    const [serverVerified, setServerVerified] = useState<boolean | null>(
+      requiredRole ? null : true
+    );
 
-    if (isLoading) {
+    // Server-side role verification for role-gated routes
+    useEffect(() => {
+      if (!requiredRole || !user) {
+        setServerVerified(requiredRole ? null : true);
+        return;
+      }
+
+      let cancelled = false;
+      supabase.rpc('has_role', { _user_id: user.id, _role: requiredRole })
+        .then(({ data }) => {
+          if (!cancelled) setServerVerified(data === true);
+        })
+        .catch(() => {
+          if (!cancelled) setServerVerified(false);
+        });
+
+      return () => { cancelled = true; };
+    }, [requiredRole, user?.id]);
+
+    if (isLoading || serverVerified === null) {
       return (
         <div ref={ref} className="min-h-screen flex items-center justify-center bg-background">
           <div className="flex flex-col items-center gap-3">
@@ -31,7 +54,7 @@ export const ProtectedRoute = forwardRef<HTMLDivElement, ProtectedRouteProps>(
       return <Navigate to="/auth" state={{ from: location }} replace />;
     }
 
-    if (requiredRole && !hasRole(requiredRole)) {
+    if (requiredRole && (!hasRole(requiredRole) || !serverVerified)) {
       return <Navigate to="/" replace />;
     }
 
