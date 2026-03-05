@@ -84,7 +84,7 @@ export default function AuthPage() {
       } else if (error.message.includes('Email not confirmed')) {
         setError('Please verify your email before signing in. Check your inbox for a confirmation link.');
       } else {
-        setError(error.message);
+        setError('Unable to sign in. Please try again.');
       }
     }
   };
@@ -119,7 +119,7 @@ export default function AuthPage() {
       if (error.message.includes('already registered')) {
         setError('This email is already registered. Please sign in instead.');
       } else {
-        setError(error.message);
+        setError('Unable to create account. Please try again.');
       }
     } else {
       setSuccess('Account created successfully! Please check your email to verify your account, then sign in.');
@@ -155,7 +155,8 @@ export default function AuthPage() {
       if (error) throw error;
       setForgotSuccess(true);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Failed to send reset email');
+      console.error('Password reset error:', err);
+      setError('Failed to send reset email. Please try again.');
     } finally {
       setForgotLoading(false);
     }

@@ -158,7 +158,7 @@ export function ArtifactForm({ isOpen, onClose, onSuccess, domain, artifact }: A
       console.error('Error saving artifact:', error);
       toast({
         title: "Error",
-        description: error instanceof Error ? error.message : "Failed to save artifact",
+        description: "Failed to save artifact. Please try again.",
         variant: "destructive",
       });
     } finally {

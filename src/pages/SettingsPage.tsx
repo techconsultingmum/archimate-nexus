@@ -126,6 +126,17 @@ const SettingsPage = () => {
 
     setChangingPassword(true);
     try {
+      // Re-authenticate by verifying the current password first
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: profile?.email || '',
+        password: passwordData.currentPassword,
+      });
+
+      if (signInError) {
+        setPasswordErrors({ currentPassword: "Current password is incorrect." });
+        return;
+      }
+
       const { error } = await supabase.auth.updateUser({
         password: passwordData.newPassword,
       });
@@ -142,12 +153,12 @@ const SettingsPage = () => {
     } catch (error) {
       console.error("Error updating password:", error);
       setPasswordErrors({ 
-        currentPassword: "Failed to update password. Please check your current password and try again." 
+        currentPassword: "Failed to update password. Please try again." 
       });
     } finally {
       setChangingPassword(false);
     }
-  }, [passwordData, toast]);
+  }, [passwordData, profile?.email, toast]);
 
   return (
     <AppLayout>
