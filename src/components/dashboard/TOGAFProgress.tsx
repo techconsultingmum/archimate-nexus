@@ -69,7 +69,7 @@ export function TOGAFProgress() {
           <div key={phase.id} className="flex items-center gap-3 group cursor-pointer hover:bg-secondary/50 -mx-2 px-2 py-1.5 rounded-lg transition-colors">
             <div
               className={cn(
-                "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0",
+                "w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground shrink-0",
                 phase.status === "completed" ? phaseColors[phase.id] : 
                 phase.status === "in-progress" ? phaseColors[phase.id] : "bg-muted text-muted-foreground"
               )}

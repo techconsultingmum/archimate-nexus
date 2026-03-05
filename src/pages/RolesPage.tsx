@@ -166,14 +166,14 @@ const RolesPage = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2">
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${role.color} flex items-center justify-center shrink-0`}>
-                        <role.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                        <role.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                       </div>
                       <div className="flex flex-wrap gap-1 justify-end">
                         <Badge variant="secondary" className="text-xs">
                           {role.activeProjects} active
                         </Badge>
                         {role.pendingReviews > 0 && (
-                          <Badge variant="outline" className="text-xs border-amber-500 text-amber-600">
+                          <Badge variant="outline" className="text-xs border-domain-business text-domain-business">
                             {role.pendingReviews} pending
                           </Badge>
                         )}
