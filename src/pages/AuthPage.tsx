@@ -79,13 +79,7 @@ export default function AuthPage() {
     setIsLoading(false);
     
     if (error) {
-      if (error.message.includes('Invalid login credentials')) {
-        setError('Invalid email or password. Please try again.');
-      } else if (error.message.includes('Email not confirmed')) {
-        setError('Please verify your email before signing in. Check your inbox for a confirmation link.');
-      } else {
-        setError('Unable to sign in. Please try again.');
-      }
+      setError('Invalid email or password. Please try again.');
     }
   };
 
