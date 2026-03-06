@@ -2,6 +2,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Shield, Eye, Layers, GitBranch, Target, Users, Cpu, Network } from "lucide-react";
 
 const viewpoints = [
@@ -82,49 +83,49 @@ const viewpoints = [
 const DoDAFPage = () => {
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Shield className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">DoDAF 2.0</h1>
-            <Badge variant="outline" className="text-xs">Department of Defense Architecture Framework</Badge>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+            <Shield className="h-6 sm:h-8 w-6 sm:w-8 text-primary" />
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">DoDAF 2.0</h1>
+            <Badge variant="outline" className="text-xs w-fit">Department of Defense Architecture Framework</Badge>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             A comprehensive, model-based framework for complex, large-scale, and system-intensive defense projects.
           </p>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="viewpoints" className="space-y-6">
-          <TabsList className="bg-secondary/50">
-            <TabsTrigger value="viewpoints">Viewpoints</TabsTrigger>
-            <TabsTrigger value="fitfor">Fit-for-Purpose</TabsTrigger>
-            <TabsTrigger value="meta">Meta Model</TabsTrigger>
+          <TabsList className="bg-secondary/50 w-full sm:w-auto overflow-x-auto">
+            <TabsTrigger value="viewpoints" className="text-xs sm:text-sm">Viewpoints</TabsTrigger>
+            <TabsTrigger value="fitfor" className="text-xs sm:text-sm">Fit-for-Purpose</TabsTrigger>
+            <TabsTrigger value="meta" className="text-xs sm:text-sm">Meta Model</TabsTrigger>
           </TabsList>
 
           <TabsContent value="viewpoints" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {viewpoints.map((vp) => (
                 <Card key={vp.id} className="hover:border-primary/50 transition-colors cursor-pointer group">
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg ${vp.color} flex items-center justify-center`}>
-                        <vp.icon className="h-5 w-5 text-white" />
+                      <div className={`w-10 h-10 rounded-lg ${vp.color} flex items-center justify-center shrink-0`}>
+                        <vp.icon className="h-5 w-5 text-primary-foreground" />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <CardTitle className="text-base group-hover:text-primary transition-colors">
                           {vp.abbr}
                         </CardTitle>
-                        <CardDescription className="text-xs">{vp.name}</CardDescription>
+                        <CardDescription className="text-xs truncate">{vp.name}</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent className="pt-0">
                     <p className="text-xs text-muted-foreground mb-3">{vp.description}</p>
-                    <div className="space-y-1">
+                    <div className="flex flex-wrap gap-1">
                       {vp.models.slice(0, 3).map((model, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs mr-1 mb-1">
+                        <Badge key={idx} variant="secondary" className="text-xs">
                           {model.split(":")[0]}
                         </Badge>
                       ))}
@@ -143,13 +144,13 @@ const DoDAFPage = () => {
           <TabsContent value="fitfor" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Fit-for-Purpose Views</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">Fit-for-Purpose Views</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   DoDAF emphasizes creating architecture products that serve specific stakeholder needs
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="p-4 rounded-lg bg-secondary/50">
                     <h4 className="font-semibold mb-2">Capability Planning</h4>
                     <p className="text-sm text-muted-foreground">
@@ -176,13 +177,13 @@ const DoDAFPage = () => {
           <TabsContent value="meta" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>DoDAF Meta Model (DM2)</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">DoDAF Meta Model (DM2)</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   The underlying data model that ensures consistency across all architecture products
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-3">
                     <h4 className="font-semibold">Core Entities</h4>
                     <div className="flex flex-wrap gap-2">

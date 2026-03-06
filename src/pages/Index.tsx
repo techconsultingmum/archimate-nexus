@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users, Download, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -249,7 +249,7 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Federal</p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </CardContent>
         </Card>

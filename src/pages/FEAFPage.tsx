@@ -2,6 +2,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Landmark, Briefcase, Database, AppWindow, Server, Shield, ArrowRight } from "lucide-react";
 
 const referenceModels = [
@@ -70,41 +71,41 @@ const segments = [
 const FEAFPage = () => {
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Landmark className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold tracking-tight">FEAF</h1>
-            <Badge variant="outline" className="text-xs">Federal Enterprise Architecture Framework</Badge>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+            <Landmark className="h-6 sm:h-8 w-6 sm:w-8 text-primary" />
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">FEAF</h1>
+            <Badge variant="outline" className="text-xs w-fit">Federal Enterprise Architecture Framework</Badge>
           </div>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             A framework for the U.S. federal government to promote shared development and resource optimization.
           </p>
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="models" className="space-y-6">
-          <TabsList className="bg-secondary/50">
-            <TabsTrigger value="models">Reference Models</TabsTrigger>
-            <TabsTrigger value="segments">Segment Architecture</TabsTrigger>
-            <TabsTrigger value="methodology">Methodology</TabsTrigger>
+          <TabsList className="bg-secondary/50 w-full sm:w-auto overflow-x-auto">
+            <TabsTrigger value="models" className="text-xs sm:text-sm">Reference Models</TabsTrigger>
+            <TabsTrigger value="segments" className="text-xs sm:text-sm">Segment Architecture</TabsTrigger>
+            <TabsTrigger value="methodology" className="text-xs sm:text-sm">Methodology</TabsTrigger>
           </TabsList>
 
           <TabsContent value="models" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {referenceModels.map((rm) => (
                 <Card key={rm.id} className="hover:border-primary/50 transition-colors cursor-pointer group">
                   <CardHeader className="pb-3">
                     <div className="flex items-center gap-3">
-                      <div className={`w-12 h-12 rounded-lg ${rm.color} flex items-center justify-center`}>
-                        <rm.icon className="h-6 w-6 text-white" />
+                      <div className={`w-10 sm:w-12 h-10 sm:h-12 rounded-lg ${rm.color} flex items-center justify-center shrink-0`}>
+                        <rm.icon className="h-5 sm:h-6 w-5 sm:w-6 text-primary-foreground" />
                       </div>
-                      <div>
-                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                      <div className="min-w-0">
+                        <CardTitle className="text-base sm:text-lg group-hover:text-primary transition-colors">
                           {rm.abbr}
                         </CardTitle>
-                        <CardDescription className="text-xs">{rm.name}</CardDescription>
+                        <CardDescription className="text-xs truncate">{rm.name}</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
@@ -127,15 +128,15 @@ const FEAFPage = () => {
           </TabsContent>
 
           <TabsContent value="segments" className="space-y-6">
-            <div className="grid md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {segments.map((seg) => (
                 <Card key={seg.name}>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
+                    <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                       {seg.name}
                       <Badge>{seg.count} segments</Badge>
                     </CardTitle>
-                    <CardDescription>{seg.description}</CardDescription>
+                    <CardDescription className="text-xs sm:text-sm">{seg.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-2 text-sm text-primary cursor-pointer hover:underline">
@@ -149,25 +150,28 @@ const FEAFPage = () => {
 
             <Card>
               <CardHeader>
-                <CardTitle>Segment Architecture Layers</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">Segment Architecture Layers</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   FEAF segments provide a structured approach to enterprise architecture
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="relative">
-                  <div className="flex flex-col gap-2">
-                    {["Strategic Goals", "Business Services", "Data & Information", "Applications", "Infrastructure"].map((layer, idx) => (
-                      <div
-                        key={layer}
-                        className="p-4 rounded-lg bg-gradient-to-r from-primary/20 to-primary/5 border border-primary/20"
-                        style={{ marginLeft: `${idx * 20}px` }}
-                      >
-                        <span className="font-medium">{layer}</span>
-                      </div>
-                    ))}
+                <ScrollArea className="w-full">
+                  <div className="relative min-w-[300px]">
+                    <div className="flex flex-col gap-2">
+                      {["Strategic Goals", "Business Services", "Data & Information", "Applications", "Infrastructure"].map((layer, idx) => (
+                        <div
+                          key={layer}
+                          className="p-3 sm:p-4 rounded-lg bg-gradient-to-r from-primary/20 to-primary/5 border border-primary/20"
+                          style={{ marginLeft: `${idx * 16}px` }}
+                        >
+                          <span className="font-medium text-sm sm:text-base">{layer}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </CardContent>
             </Card>
           </TabsContent>
@@ -175,13 +179,13 @@ const FEAFPage = () => {
           <TabsContent value="methodology" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Collaborative Planning Methodology (CPM)</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-lg sm:text-xl">Collaborative Planning Methodology (CPM)</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">
                   A six-step process for developing and using architecture
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
                     { step: 1, title: "Identify", desc: "Define architecture scope and purpose" },
                     { step: 2, title: "Architect", desc: "Develop segment architecture" },
@@ -192,7 +196,7 @@ const FEAFPage = () => {
                   ].map((item) => (
                     <div key={item.step} className="p-4 rounded-lg bg-secondary/50 border">
                       <div className="flex items-center gap-3 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">
+                        <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shrink-0">
                           {item.step}
                         </div>
                         <span className="font-semibold">{item.title}</span>
