@@ -206,7 +206,7 @@ const Index = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <a href="/togaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              <Link to="/togaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-a/20 flex items-center justify-center">
                     <Layers className="h-5 w-5 text-phase-a" />
@@ -216,8 +216,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Lifecycle</p>
                   </div>
                 </div>
-              </a>
-              <a href="/zachman" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/zachman" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-c-data/20 flex items-center justify-center">
                     <Target className="h-5 w-5 text-phase-c-data" />
@@ -227,8 +227,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">6×6 Matrix</p>
                   </div>
                 </div>
-              </a>
-              <a href="/dodaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/dodaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-d/20 flex items-center justify-center">
                     <Building2 className="h-5 w-5 text-phase-d" />
@@ -238,8 +238,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Defense</p>
                   </div>
                 </div>
-              </a>
-              <a href="/feaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/feaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-g/20 flex items-center justify-center">
                     <Users className="h-5 w-5 text-phase-g" />
