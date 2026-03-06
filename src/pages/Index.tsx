@@ -99,10 +99,12 @@ const Index = () => {
 
       // Download file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
+      link.href = url;
       link.download = `architecture-artifacts-${new Date().toISOString().split('T')[0]}.csv`;
       link.click();
+      URL.revokeObjectURL(url);
 
       toast({
         title: "Export successful",
