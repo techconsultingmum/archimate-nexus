@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { Building2, Database, AppWindow, Server, Layers, Target, AlertTriangle, CheckCircle, Brain, Cloud, Users, Download, Loader2 } from "lucide-react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
@@ -99,10 +99,12 @@ const Index = () => {
 
       // Download file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
+      link.href = url;
       link.download = `architecture-artifacts-${new Date().toISOString().split('T')[0]}.csv`;
       link.click();
+      URL.revokeObjectURL(url);
 
       toast({
         title: "Export successful",
@@ -206,7 +208,7 @@ const Index = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <a href="/togaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              <Link to="/togaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-a/20 flex items-center justify-center">
                     <Layers className="h-5 w-5 text-phase-a" />
@@ -216,8 +218,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Lifecycle</p>
                   </div>
                 </div>
-              </a>
-              <a href="/zachman" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/zachman" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-c-data/20 flex items-center justify-center">
                     <Target className="h-5 w-5 text-phase-c-data" />
@@ -227,8 +229,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">6×6 Matrix</p>
                   </div>
                 </div>
-              </a>
-              <a href="/dodaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/dodaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-d/20 flex items-center justify-center">
                     <Building2 className="h-5 w-5 text-phase-d" />
@@ -238,8 +240,8 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Defense</p>
                   </div>
                 </div>
-              </a>
-              <a href="/feaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
+              </Link>
+              <Link to="/feaf" className="p-4 rounded-lg border border-border hover:border-accent hover:bg-accent/5 transition-all group">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-phase-g/20 flex items-center justify-center">
                     <Users className="h-5 w-5 text-phase-g" />
@@ -249,7 +251,7 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">Federal</p>
                   </div>
                 </div>
-              </a>
+              </Link>
             </div>
           </CardContent>
         </Card>

@@ -103,11 +103,8 @@ const GovernancePage = () => {
     return "text-destructive";
   };
 
-  const pendingReviews = [
-    { id: 1, name: "API Gateway Service", domain: "Application", daysWaiting: 3 },
-    { id: 2, name: "Customer Data Model", domain: "Data", daysWaiting: 5 },
-    { id: 3, name: "Cloud Migration Plan", domain: "Cloud", daysWaiting: 2 },
-  ];
+  // Pending reviews derived from actual data
+  const pendingReviewCount = metrics.find(m => m.name === "Pending Review")?.value || 0;
 
   return (
     <AppLayout>
@@ -234,35 +231,25 @@ const GovernancePage = () => {
                 <CardDescription>Artifacts awaiting governance approval</CardDescription>
               </CardHeader>
               <CardContent>
-                {pendingReviews.length === 0 ? (
+                {loading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  </div>
+                ) : pendingReviewCount === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <CheckCircle className="h-12 w-12 mx-auto mb-4 text-accent" />
-                    <p>All reviews are up to date!</p>
+                    <p className="font-medium">All reviews are up to date!</p>
+                    <p className="text-sm mt-1">No artifacts are currently pending review.</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
-                    {pendingReviews.map((review) => (
-                      <div
-                        key={review.id}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-lg border border-border hover:bg-muted/50 cursor-pointer transition-colors"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-lg bg-domain-business/20 flex items-center justify-center shrink-0">
-                            <Clock className="h-5 w-5 text-domain-business" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-medium truncate">{review.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {review.domain} · Waiting {review.daysWaiting} days
-                            </p>
-                          </div>
-                        </div>
-                        <Button variant="outline" size="sm" className="w-full sm:w-auto">
-                          Review
-                          <ArrowRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      </div>
-                    ))}
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Clock className="h-12 w-12 mx-auto mb-4 text-domain-business" />
+                    <p className="font-medium text-foreground">{pendingReviewCount} artifact{pendingReviewCount !== 1 ? 's' : ''} pending review</p>
+                    <p className="text-sm mt-1">Visit the repository to review artifacts with "Under Review" status.</p>
+                    <Button variant="outline" size="sm" className="mt-4" onClick={() => window.location.href = '/repository/business'}>
+                      Go to Repository
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
                   </div>
                 )}
               </CardContent>

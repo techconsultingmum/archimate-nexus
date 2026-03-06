@@ -4,6 +4,7 @@ import { ZachmanMatrix } from "@/components/zachman/ZachmanMatrix";
 import { Button } from "@/components/ui/button";
 import { Download, Filter, Plus, Grid3X3, List } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetContent,
@@ -58,27 +59,28 @@ const ZachmanPage = () => {
 
   return (
     <AppLayout>
-      <div className="p-6 space-y-6 max-w-7xl mx-auto">
+      <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Zachman Framework</h1>
-            <p className="text-muted-foreground mt-1">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Zachman Framework</h1>
+            <p className="text-muted-foreground mt-1 text-sm sm:text-base">
               Enterprise ontology matrix for comprehensive architecture classification
             </p>
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3">
             <Button variant="outline" size="sm">
               <Filter className="h-4 w-4 mr-2" />
-              Filter
+              <span className="hidden sm:inline">Filter</span>
             </Button>
             <Button variant="outline" size="sm">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              <span className="hidden sm:inline">Export</span>
             </Button>
             <Button size="sm" className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Plus className="h-4 w-4 mr-2" />
-              Add Artifact
+              <span className="hidden sm:inline">Add Artifact</span>
+              <span className="sm:hidden">Add</span>
             </Button>
           </div>
         </div>
@@ -86,18 +88,20 @@ const ZachmanPage = () => {
         {/* View Toggle */}
         <Tabs defaultValue="matrix" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="matrix" className="gap-2">
+            <TabsTrigger value="matrix" className="gap-2 text-xs sm:text-sm">
               <Grid3X3 className="h-4 w-4" />
-              Matrix View
+              <span className="hidden sm:inline">Matrix View</span>
+              <span className="sm:hidden">Matrix</span>
             </TabsTrigger>
-            <TabsTrigger value="list" className="gap-2">
+            <TabsTrigger value="list" className="gap-2 text-xs sm:text-sm">
               <List className="h-4 w-4" />
-              List View
+              <span className="hidden sm:inline">List View</span>
+              <span className="sm:hidden">List</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="matrix">
-            <div className="bg-card rounded-xl border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-3 sm:p-6 overflow-x-auto">
               <ZachmanMatrix onCellClick={handleCellClick} />
             </div>
           </TabsContent>
@@ -110,9 +114,9 @@ const ZachmanPage = () => {
         </Tabs>
 
         {/* Framework Description */}
-        <div className="bg-secondary/30 rounded-xl p-6">
+        <div className="bg-secondary/30 rounded-xl p-4 sm:p-6">
           <h3 className="font-semibold mb-3">About the Zachman Framework</h3>
-          <div className="grid md:grid-cols-2 gap-6 text-sm text-muted-foreground">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 text-sm text-muted-foreground">
             <div>
               <p className="mb-3">
                 The Zachman Framework is an enterprise ontology and fundamental structure 
@@ -141,7 +145,7 @@ const ZachmanPage = () => {
 
       {/* Cell Details Sheet */}
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-[400px] sm:w-[540px]">
+        <SheetContent className="w-[350px] sm:w-[540px]">
           <SheetHeader>
             <SheetTitle>{details?.title}</SheetTitle>
             <SheetDescription>{details?.description}</SheetDescription>
