@@ -213,11 +213,11 @@ const SettingsPage = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <Button variant="outline" size="sm">
+                   <Button variant="outline" size="sm" disabled>
                       Change Avatar
                     </Button>
                     <p className="text-xs text-muted-foreground mt-2">
-                      JPG, PNG or GIF. Max size 2MB.
+                      Avatar upload coming soon
                     </p>
                   </div>
                 </div>

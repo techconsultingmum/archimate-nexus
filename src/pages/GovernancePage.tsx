@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ interface ComplianceMetric {
 }
 
 const GovernancePage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [complianceScore, setComplianceScore] = useState(0);
   const [metrics, setMetrics] = useState<ComplianceMetric[]>([]);
@@ -246,7 +248,7 @@ const GovernancePage = () => {
                     <Clock className="h-12 w-12 mx-auto mb-4 text-domain-business" />
                     <p className="font-medium text-foreground">{pendingReviewCount} artifact{pendingReviewCount !== 1 ? 's' : ''} pending review</p>
                     <p className="text-sm mt-1">Visit the repository to review artifacts with "Under Review" status.</p>
-                    <Button variant="outline" size="sm" className="mt-4" onClick={() => window.location.href = '/repository/business'}>
+                    <Button variant="outline" size="sm" className="mt-4" onClick={() => navigate('/repository/business')}>
                       Go to Repository
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
