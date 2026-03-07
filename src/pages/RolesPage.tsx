@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -134,6 +135,7 @@ const architectRoles = [
 ];
 
 const RolesPage = () => {
+  const navigate = useNavigate();
   return (
     <AppLayout>
       <div className="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto">
@@ -145,7 +147,10 @@ const RolesPage = () => {
               Role-specific dashboards and responsibilities
             </p>
           </div>
-          <Button className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto">
+          <Button 
+            className="bg-accent hover:bg-accent/90 text-accent-foreground w-full sm:w-auto"
+            onClick={() => navigate('/users')}
+          >
             Manage Permissions
           </Button>
         </div>
