@@ -33,8 +33,6 @@ const architectRoles = [
       "Oversee cross-domain architecture decisions",
     ],
     artifacts: ["Architecture Vision", "Principles Catalog", "Stakeholder Map", "Business Capability Model"],
-    activeProjects: 12,
-    pendingReviews: 5,
   },
   {
     id: "solution",
@@ -49,8 +47,6 @@ const architectRoles = [
       "Bridge gap between enterprise and project teams",
     ],
     artifacts: ["Solution Architecture Document", "Integration Specifications", "Deployment Views", "Technical Design"],
-    activeProjects: 8,
-    pendingReviews: 3,
   },
   {
     id: "application",
@@ -65,8 +61,6 @@ const architectRoles = [
       "Ensure application security and performance",
     ],
     artifacts: ["Application Portfolio", "API Catalog", "Service Definitions", "Component Diagrams"],
-    activeProjects: 15,
-    pendingReviews: 7,
   },
   {
     id: "data",
@@ -81,8 +75,6 @@ const architectRoles = [
       "Design data integration patterns",
     ],
     artifacts: ["Data Models", "Data Dictionary", "Data Flow Diagrams", "Master Data Definitions"],
-    activeProjects: 6,
-    pendingReviews: 4,
   },
   {
     id: "business",
@@ -97,8 +89,6 @@ const architectRoles = [
       "Identify business improvement opportunities",
     ],
     artifacts: ["Business Capability Map", "Process Models", "Value Streams", "Organization Charts"],
-    activeProjects: 10,
-    pendingReviews: 6,
   },
   {
     id: "ai",
@@ -113,8 +103,6 @@ const architectRoles = [
       "Integrate AI capabilities into enterprise systems",
     ],
     artifacts: ["AI Solution Designs", "ML Pipeline Architecture", "Model Catalog", "AI Ethics Guidelines"],
-    activeProjects: 4,
-    pendingReviews: 2,
   },
   {
     id: "cloud",
@@ -129,8 +117,6 @@ const architectRoles = [
       "Optimize cloud costs and performance",
     ],
     artifacts: ["Cloud Architecture Diagrams", "Migration Roadmaps", "Landing Zone Designs", "Cost Models"],
-    activeProjects: 9,
-    pendingReviews: 4,
   },
 ];
 
