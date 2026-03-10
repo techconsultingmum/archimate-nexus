@@ -159,16 +159,9 @@ const RolesPage = () => {
                       <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${role.color} flex items-center justify-center shrink-0`}>
                         <role.icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
                       </div>
-                      <div className="flex flex-wrap gap-1 justify-end">
-                        <Badge variant="secondary" className="text-xs">
-                          {role.activeProjects} active
-                        </Badge>
-                        {role.pendingReviews > 0 && (
-                          <Badge variant="outline" className="text-xs border-domain-business text-domain-business">
-                            {role.pendingReviews} pending
-                          </Badge>
-                        )}
-                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        {role.artifacts.length} artifacts
+                      </Badge>
                     </div>
                     <CardTitle className="mt-3 text-base sm:text-lg">{role.title}</CardTitle>
                     <CardDescription className="text-xs sm:text-sm">{role.description}</CardDescription>

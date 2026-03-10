@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { TOGAFWheel } from "@/components/togaf/TOGAFWheel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Download, Plus, Settings } from "lucide-react";
+import { Download, Plus, Settings, Clock, FileText, Shield } from "lucide-react";
 
 const TOGAFPage = () => {
   const [selectedPhase, setSelectedPhase] = useState<string | null>("c");
