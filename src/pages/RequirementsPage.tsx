@@ -48,11 +48,7 @@ const RequirementsPage = () => {
   });
 
   useEffect(() => {
-    // Simulate loading - in a real app, this would fetch from the database
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
+    setLoading(false);
   }, []);
 
   const priorityColors = {

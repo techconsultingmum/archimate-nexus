@@ -83,7 +83,7 @@ export function AppSidebarMobile({ onNavigate }: AppSidebarMobileProps) {
             <Layers className="w-5 h-5 text-primary-foreground" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-foreground text-sm">EA Tool</span>
+            <span className="font-bold text-foreground text-sm">ArchiNexus</span>
             <span className="text-[10px] text-muted-foreground">Enterprise Architecture</span>
           </div>
         </div>
