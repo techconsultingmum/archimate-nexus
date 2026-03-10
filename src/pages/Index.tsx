@@ -136,7 +136,7 @@ const Index = () => {
               Welcome back, {profile?.full_name?.split(' ')[0] || 'Architect'}
             </h1>
             <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-              Enterprise Architecture Platform
+              ArchiNexus — Enterprise Architecture Platform
             </p>
           </div>
           <div className="flex gap-2 sm:gap-3">

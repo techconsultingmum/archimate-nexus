@@ -282,8 +282,8 @@ const SettingsPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Notification Preferences</CardTitle>
-                <CardDescription>
-                  Choose how you want to be notified about activity
+              <CardDescription>
+                  Choose how you want to be notified about activity (preferences saved locally)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
