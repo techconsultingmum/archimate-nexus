@@ -55,20 +55,32 @@ const TOGAFPage = () => {
           </TabsContent>
 
           <TabsContent value="timeline">
-            <div className="bg-card rounded-xl border border-border p-6 min-h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">Timeline view coming soon...</p>
+            <div className="bg-card rounded-xl border border-border p-6 min-h-[300px] flex flex-col items-center justify-center text-center">
+              <Clock className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="font-semibold text-lg mb-2">Timeline View</h3>
+              <p className="text-muted-foreground text-sm max-w-md">
+                Visualize your ADM cycle as a timeline with milestones, deliverables, and phase dependencies.
+              </p>
             </div>
           </TabsContent>
 
           <TabsContent value="deliverables">
-            <div className="bg-card rounded-xl border border-border p-6 min-h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">Deliverables catalog coming soon...</p>
+            <div className="bg-card rounded-xl border border-border p-6 min-h-[300px] flex flex-col items-center justify-center text-center">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="font-semibold text-lg mb-2">Deliverables Catalog</h3>
+              <p className="text-muted-foreground text-sm max-w-md">
+                Browse and manage all architecture deliverables organized by ADM phase.
+              </p>
             </div>
           </TabsContent>
 
           <TabsContent value="governance">
-            <div className="bg-card rounded-xl border border-border p-6 min-h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">Governance workflows coming soon...</p>
+            <div className="bg-card rounded-xl border border-border p-6 min-h-[300px] flex flex-col items-center justify-center text-center">
+              <Shield className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="font-semibold text-lg mb-2">Governance Workflows</h3>
+              <p className="text-muted-foreground text-sm max-w-md">
+                Define review gates, approval workflows, and compliance checkpoints for each ADM phase.
+              </p>
             </div>
           </TabsContent>
         </Tabs>
