@@ -74,6 +74,11 @@ const SettingsPage = () => {
     localStorage.setItem('sidebar-collapsed', String(checked));
   };
 
+  // Persist notification preferences
+  useEffect(() => {
+    localStorage.setItem('ea-notifications', JSON.stringify(notifications));
+  }, [notifications]);
+
   // Sync profile data when it changes
   useEffect(() => {
     if (profile) {
