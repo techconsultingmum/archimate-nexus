@@ -231,29 +231,27 @@ const RequirementsPage = () => {
             </Card>
           </TabsContent>
 
-          <TabsContent value="functional">
-            <Card>
-              <CardContent className="py-12 text-center text-muted-foreground">
-                No functional requirements defined yet.
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="non-functional">
-            <Card>
-              <CardContent className="py-12 text-center text-muted-foreground">
-                No non-functional requirements defined yet.
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="constraints">
-            <Card>
-              <CardContent className="py-12 text-center text-muted-foreground">
-                No constraints defined yet.
-              </CardContent>
-            </Card>
-          </TabsContent>
+          {["functional", "non-functional", "constraints"].map((tab) => (
+            <TabsContent key={tab} value={tab}>
+              <Card>
+                <CardContent className="py-12">
+                  <div className="flex flex-col items-center justify-center text-center">
+                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3">
+                      <FileText className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                    <h3 className="font-semibold mb-1">No {tab} requirements yet</h3>
+                    <p className="text-sm text-muted-foreground max-w-sm mb-4">
+                      Add {tab} requirements to track and trace them across your architecture.
+                    </p>
+                    <Button size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Requirement
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          ))}
         </Tabs>
       </div>
     </AppLayout>

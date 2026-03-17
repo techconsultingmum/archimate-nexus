@@ -49,11 +49,17 @@ const SettingsPage = () => {
     fullName: "",
     email: "",
   });
-  const [notifications, setNotifications] = useState({
-    emailNotifications: true,
-    reviewAlerts: true,
-    changeNotifications: false,
-    weeklyDigest: true,
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const saved = localStorage.getItem('ea-notifications');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {
+      emailNotifications: true,
+      reviewAlerts: true,
+      changeNotifications: false,
+      weeklyDigest: true,
+    };
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -67,6 +73,11 @@ const SettingsPage = () => {
     setCollapsedSidebar(checked);
     localStorage.setItem('sidebar-collapsed', String(checked));
   };
+
+  // Persist notification preferences
+  useEffect(() => {
+    localStorage.setItem('ea-notifications', JSON.stringify(notifications));
+  }, [notifications]);
 
   // Sync profile data when it changes
   useEffect(() => {
