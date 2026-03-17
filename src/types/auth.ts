@@ -37,13 +37,13 @@ export const ROLE_LABELS: Record<AppRole, string> = {
 };
 
 export const ROLE_COLORS: Record<AppRole, string> = {
-  enterprise_architect: 'bg-role-enterprise text-white',
-  solution_architect: 'bg-role-solution text-white',
-  ai_architect: 'bg-role-ai text-white',
-  cloud_architect: 'bg-role-cloud text-white',
-  application_architect: 'bg-role-application text-white',
-  data_architect: 'bg-role-data text-white',
-  business_architect: 'bg-role-business text-white',
+  enterprise_architect: 'bg-role-enterprise text-primary-foreground',
+  solution_architect: 'bg-role-solution text-primary-foreground',
+  ai_architect: 'bg-role-ai text-primary-foreground',
+  cloud_architect: 'bg-role-cloud text-primary-foreground',
+  application_architect: 'bg-role-application text-primary-foreground',
+  data_architect: 'bg-role-data text-primary-foreground',
+  business_architect: 'bg-role-business text-primary-foreground',
   viewer: 'bg-muted text-muted-foreground',
 };
 
