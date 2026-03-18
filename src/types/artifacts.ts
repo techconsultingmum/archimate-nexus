@@ -50,12 +50,12 @@ export const DOMAIN_LABELS: Record<ArchitectureDomain, string> = {
 };
 
 export const DOMAIN_COLORS: Record<ArchitectureDomain, string> = {
-  business: 'bg-domain-business text-white',
-  data: 'bg-domain-data text-white',
-  application: 'bg-domain-application text-white',
-  technology: 'bg-domain-technology text-white',
-  ai: 'bg-domain-ai text-white',
-  cloud: 'bg-domain-cloud text-white',
+  business: 'bg-domain-business text-primary-foreground',
+  data: 'bg-domain-data text-primary-foreground',
+  application: 'bg-domain-application text-primary-foreground',
+  technology: 'bg-domain-technology text-primary-foreground',
+  ai: 'bg-domain-ai text-primary-foreground',
+  cloud: 'bg-domain-cloud text-primary-foreground',
 };
 
 export const ARTIFACT_TYPE_LABELS: Record<ArtifactType, string> = {
