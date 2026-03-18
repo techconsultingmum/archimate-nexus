@@ -107,8 +107,18 @@ const ZachmanPage = () => {
           </TabsContent>
 
           <TabsContent value="list">
-            <div className="bg-card rounded-xl border border-border p-6 min-h-[400px] flex items-center justify-center">
-              <p className="text-muted-foreground">List view coming soon...</p>
+            <div className="bg-card rounded-xl border border-border p-6 min-h-[400px] flex flex-col items-center justify-center text-center">
+              <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                <List className="h-8 w-8 text-muted-foreground" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">List View</h3>
+              <p className="text-muted-foreground text-sm max-w-md mb-4">
+                Browse all Zachman Framework artifacts in a flat, searchable list format organized by perspective and interrogative.
+              </p>
+              <Button size="sm" variant="outline" onClick={() => {}}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add Artifact
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
