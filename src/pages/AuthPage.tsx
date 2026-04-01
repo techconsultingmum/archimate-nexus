@@ -353,6 +353,14 @@ export default function AuthPage() {
             </TabsContent>
             
             <TabsContent value="signup">
+              {isBootstrap && (
+                <Alert className="mb-4 border-primary/50 bg-primary/5">
+                  <Crown className="h-4 w-4 text-primary" />
+                  <AlertDescription className="text-foreground">
+                    <strong>Welcome!</strong> You're the first user. Your account will automatically receive <strong>Enterprise Architect</strong> (admin) privileges.
+                  </AlertDescription>
+                </Alert>
+              )}
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">Full Name</Label>
