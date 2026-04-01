@@ -45,6 +45,7 @@ export default function AuthPage() {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState(false);
+  const [isBootstrap, setIsBootstrap] = useState(false);
   
   // Login form
   const [loginEmail, setLoginEmail] = useState('');
@@ -56,6 +57,24 @@ export default function AuthPage() {
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [signupName, setSignupName] = useState('');
   const [signupRole, setSignupRole] = useState<AppRole>('viewer');
+
+  // Check if this is the first user (bootstrap mode)
+  useEffect(() => {
+    const checkBootstrap = async () => {
+      try {
+        const { count } = await supabase
+          .from('user_roles')
+          .select('*', { count: 'exact', head: true });
+        if (count === 0) {
+          setIsBootstrap(true);
+          setActiveTab('signup');
+        }
+      } catch {
+        // Ignore — non-critical
+      }
+    };
+    checkBootstrap();
+  }, []);
 
   useEffect(() => {
     if (user && !authLoading) {
