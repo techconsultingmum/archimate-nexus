@@ -7,9 +7,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Layers, AlertCircle, Loader2, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
+import { AppRole, ROLE_LABELS } from '@/types/auth';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(8, 'Password must be at least 8 characters')
@@ -17,6 +19,17 @@ const passwordSchema = z.string().min(8, 'Password must be at least 8 characters
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
   .regex(/[0-9]/, 'Password must contain at least one number');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
+
+// Roles available for self-registration (enterprise_architect is admin-assigned only)
+const SIGNUP_ROLES: { value: AppRole; label: string }[] = [
+  { value: 'viewer', label: ROLE_LABELS.viewer },
+  { value: 'business_architect', label: ROLE_LABELS.business_architect },
+  { value: 'data_architect', label: ROLE_LABELS.data_architect },
+  { value: 'application_architect', label: ROLE_LABELS.application_architect },
+  { value: 'solution_architect', label: ROLE_LABELS.solution_architect },
+  { value: 'ai_architect', label: ROLE_LABELS.ai_architect },
+  { value: 'cloud_architect', label: ROLE_LABELS.cloud_architect },
+];
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -42,6 +55,7 @@ export default function AuthPage() {
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [signupName, setSignupName] = useState('');
+  const [signupRole, setSignupRole] = useState<AppRole>('viewer');
 
   useEffect(() => {
     if (user && !authLoading) {
@@ -49,7 +63,6 @@ export default function AuthPage() {
     }
   }, [user, authLoading, navigate]);
 
-  // Clear messages when switching tabs
   const handleTabChange = (value: string) => {
     setActiveTab(value);
     setError(null);
@@ -62,7 +75,6 @@ export default function AuthPage() {
     
     try {
       emailSchema.parse(loginEmail);
-      // Only check if password is provided for login (not full validation)
       if (!loginPassword) {
         setError('Password is required');
         return;
@@ -88,7 +100,6 @@ export default function AuthPage() {
     setError(null);
     setSuccess(null);
     
-    // Validate password confirmation
     if (signupPassword !== signupConfirmPassword) {
       setError('Passwords do not match');
       return;
@@ -106,7 +117,7 @@ export default function AuthPage() {
     }
     
     setIsLoading(true);
-    const { error } = await signUp(signupEmail, signupPassword, signupName);
+    const { error } = await signUp(signupEmail, signupPassword, signupName, signupRole);
     setIsLoading(false);
     
     if (error) {
@@ -121,7 +132,7 @@ export default function AuthPage() {
       setSignupPassword('');
       setSignupConfirmPassword('');
       setSignupName('');
-      // Switch to login tab after successful signup
+      setSignupRole('viewer');
       setTimeout(() => {
         setActiveTab('login');
       }, 2000);
@@ -185,7 +196,7 @@ export default function AuthPage() {
               <button
                 type="button"
                 onClick={() => { setShowForgotPassword(false); setError(null); setForgotSuccess(false); }}
-                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+                className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to sign in
@@ -351,6 +362,28 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="signup-role">Role</Label>
+                  <Select
+                    value={signupRole}
+                    onValueChange={(value) => setSignupRole(value as AppRole)}
+                    disabled={isLoading}
+                  >
+                    <SelectTrigger id="signup-role">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SIGNUP_ROLES.map((role) => (
+                        <SelectItem key={role.value} value={role.value}>
+                          {role.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground">
+                    Choose the role that best matches your responsibilities
+                  </p>
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
                   <div className="relative">
                   <Input
@@ -432,8 +465,7 @@ export default function AuthPage() {
         </CardContent>
         
         <CardFooter className="flex flex-col text-center text-xs text-muted-foreground">
-          <p>New users are assigned the Viewer role by default.</p>
-          <p className="mt-1">Contact an Enterprise Architect to upgrade your role.</p>
+          <p>Enterprise Architect role requires admin assignment.</p>
         </CardFooter>
       </Card>
     </div>
