@@ -388,6 +388,7 @@ export default function AuthPage() {
                     autoComplete="email"
                   />
                 </div>
+                {!isBootstrap && (
                 <div className="space-y-2">
                   <Label htmlFor="signup-role">Role</Label>
                   <Select
@@ -410,6 +411,7 @@ export default function AuthPage() {
                     Choose the role that best matches your responsibilities
                   </p>
                 </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
                   <div className="relative">
