@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, AlertCircle, Loader2, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Layers, AlertCircle, Loader2, Eye, EyeOff, CheckCircle, ArrowLeft, Crown } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRole, ROLE_LABELS } from '@/types/auth';
@@ -45,6 +45,7 @@ export default function AuthPage() {
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
   const [forgotSuccess, setForgotSuccess] = useState(false);
+  const [isBootstrap, setIsBootstrap] = useState(false);
   
   // Login form
   const [loginEmail, setLoginEmail] = useState('');
@@ -56,6 +57,24 @@ export default function AuthPage() {
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   const [signupName, setSignupName] = useState('');
   const [signupRole, setSignupRole] = useState<AppRole>('viewer');
+
+  // Check if this is the first user (bootstrap mode)
+  useEffect(() => {
+    const checkBootstrap = async () => {
+      try {
+        const { count } = await supabase
+          .from('user_roles')
+          .select('*', { count: 'exact', head: true });
+        if (count === 0) {
+          setIsBootstrap(true);
+          setActiveTab('signup');
+        }
+      } catch {
+        // Ignore — non-critical
+      }
+    };
+    checkBootstrap();
+  }, []);
 
   useEffect(() => {
     if (user && !authLoading) {
@@ -334,6 +353,14 @@ export default function AuthPage() {
             </TabsContent>
             
             <TabsContent value="signup">
+              {isBootstrap && (
+                <Alert className="mb-4 border-primary/50 bg-primary/5">
+                  <Crown className="h-4 w-4 text-primary" />
+                  <AlertDescription className="text-foreground">
+                    <strong>Welcome!</strong> You're the first user. Your account will automatically receive <strong>Enterprise Architect</strong> (admin) privileges.
+                  </AlertDescription>
+                </Alert>
+              )}
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">Full Name</Label>
@@ -361,6 +388,7 @@ export default function AuthPage() {
                     autoComplete="email"
                   />
                 </div>
+                {!isBootstrap && (
                 <div className="space-y-2">
                   <Label htmlFor="signup-role">Role</Label>
                   <Select
@@ -383,6 +411,7 @@ export default function AuthPage() {
                     Choose the role that best matches your responsibilities
                   </p>
                 </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
                   <div className="relative">
@@ -465,7 +494,7 @@ export default function AuthPage() {
         </CardContent>
         
         <CardFooter className="flex flex-col text-center text-xs text-muted-foreground">
-          <p>Enterprise Architect role requires admin assignment.</p>
+          <p>{isBootstrap ? 'The first account will be granted full admin access.' : 'Enterprise Architect role requires admin assignment.'}</p>
         </CardFooter>
       </Card>
     </div>
