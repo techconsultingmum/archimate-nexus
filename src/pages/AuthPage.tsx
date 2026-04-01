@@ -494,7 +494,7 @@ export default function AuthPage() {
         </CardContent>
         
         <CardFooter className="flex flex-col text-center text-xs text-muted-foreground">
-          <p>Enterprise Architect role requires admin assignment.</p>
+          <p>{isBootstrap ? 'The first account will be granted full admin access.' : 'Enterprise Architect role requires admin assignment.'}</p>
         </CardFooter>
       </Card>
     </div>
