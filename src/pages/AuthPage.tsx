@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Layers, AlertCircle, Loader2, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
+import { Layers, AlertCircle, Loader2, Eye, EyeOff, CheckCircle, ArrowLeft, Crown } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { AppRole, ROLE_LABELS } from '@/types/auth';
